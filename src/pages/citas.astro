@@ -1,0 +1,56 @@
+---
+import { db, Pacientes } from "astro:db";
+import Layout from "../layouts/Layout.astro";
+
+const pacientes = await db.select().from(Pacientes);
+---
+
+<Layout title="Citas">
+  <main class="relative overflow-hidden">
+    <div class="mx-auto max-w-6xl px-6 lg:px-8">
+      <div class="mt-16 sm:mt-12">
+        <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+          <div class="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+            <h1 class="text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-8">Lista de Citas</h1>
+            
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white border border-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Nombre</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Cédula</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Edad</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Fecha de la Cita</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Paciente Nuevo</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Recomendado</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Motivo de Consulta</th>
+                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Imagen</th>
+                  </tr>
+                </thead>
+                <tbody class="animate__animated animate__fadeIn">
+                  {pacientes.map((paciente) => (
+                    <tr class="hover:bg-gray-100 transition-colors duration-200">
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.nombre}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.cedula}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.edad}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{new Date(paciente.fechaCita).toLocaleDateString()}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteNuevo ? 'Sí' : 'No'}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteRecomendado ? 'Sí' : 'No'}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.motivoConsulta}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
+                        <img src={paciente.rutaImagenes} alt="imagen" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">
+      <h1 class="max-w-4xl text-5xl font-bold md:text-6xl lg:text-3xl">Buscar paciente  </h1>
+    </div>
+  </main>
+</Layout>
