@@ -1,7 +1,7 @@
 ---
+// src/layouts/Layout.astro
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
-
 
 interface Props {
   title: string;
@@ -20,14 +20,15 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen font-sans antialiased grainy inter-classname">
-    
-    <Header/>
-	<slot />
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
   </body>
-  <Footer/>
-
 </html>
+
 <style is:global>
   html {
     font-family: system-ui, sans-serif;

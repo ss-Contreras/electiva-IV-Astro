@@ -10,7 +10,7 @@ export default async function () {
       pacienteNuevo: true,
       pacienteRecomendado: false,
       motivoConsulta: "Dolor de diente",
-      rutaImagenes: "images/juan_perez.jpg",
+      rutaImagenes: "images/person.png",
     },
     {
       nombre: "María González",
@@ -20,7 +20,7 @@ export default async function () {
       pacienteNuevo: false,
       pacienteRecomendado: true,
       motivoConsulta: "Revisión general",
-      rutaImagenes: "images/maria_gonzales.png",
+      rutaImagenes: "images/person.png",
     },
     {
       nombre: "Sergio Contreras",
@@ -40,7 +40,7 @@ export default async function () {
       pacienteNuevo: false,
       pacienteRecomendado: true,
       motivoConsulta: "Revisión general",
-      rutaImagenes: "images/person2.png",
+      rutaImagenes: "images/person.png",
     },
   ]);
 }
