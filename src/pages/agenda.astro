@@ -1,8 +1,11 @@
 ---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Agenda">
+  <Header />
   <main class="relative overflow-hidden">
     <div class="absolute inset-0 -z-10 overflow-hidden">
       <div
@@ -53,17 +56,17 @@ import Layout from "../layouts/Layout.astro";
                     type="date"
                   />
                   <h2 class="mb-2 font-semibold">Paciente nuevo</h2>
-                  <input
-                    class="border rounded-md px-2 py-2 w-full text-sm"
-                    type="text"
-                    placeholder="(Si/No)"
-                  />
+                  <select class="border rounded-md px-2 py-2 w-full text-sm">
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                  
                   <h2 class="mb-2 font-semibold">Recomendado</h2>
-                  <input
-                    class="border rounded-md px-2 py-2 w-full text-sm"
-                    type="text"
-                    placeholder="(Si/No)"
-                  />
+                  <select class="border rounded-md px-2 py-2 w-full text-sm">
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                  
                 </div>
                 <div class="bg-gray-900/5 p-2 rounded-xl ring-1 ring-inset ring-gray-900/10">
                   <img
@@ -93,4 +96,5 @@ import Layout from "../layouts/Layout.astro";
       <h1 class="max-w-4xl text-5xl font-bold md:text-6xl lg:text-3xl"> </h1>
     </div>
   </main>
+  <Footer/>
 </Layout>

@@ -1,0 +1,57 @@
+---
+import Sidebar from "../../components/Sidebar.astro";
+import Layout from "../../layouts/Layout.astro";
+
+// Ejemplo de componente interactivo con TypeScript
+const citas = [
+  { id: 1, paciente: "Juan Pérez", fecha: "2024-10-15", estado: "Pendiente" },
+  { id: 2, paciente: "María López", fecha: "2024-10-20", estado: "Confirmada" },
+  // Agrega más citas según sea necesario
+];
+---
+<Layout title="Administrador - Citas">
+  <div class="flex min-h-screen">
+    {/* Sidebar */}
+    <Sidebar/>
+
+    {/* Main Content */}
+    <main class="flex-1 p-8 bg-gray-100 ml-64">
+      <h1 class="text-3xl font-bold mb-4">Gestión de Citas</h1>
+      <p class="text-gray-700 mb-6">
+        Aquí puedes gestionar todas las citas programadas.
+      </p>
+      
+      {/* Tabla de Citas */}
+      <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b">ID</th>
+            <th class="py-2 px-4 border-b">Paciente</th>
+            <th class="py-2 px-4 border-b">Fecha</th>
+            <th class="py-2 px-4 border-b">Estado</th>
+            <th class="py-2 px-4 border-b">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {citas.map((cita) => (
+            <tr class="text-center">
+              <td class="py-2 px-4 border-b">{cita.id}</td>
+              <td class="py-2 px-4 border-b">{cita.paciente}</td>
+              <td class="py-2 px-4 border-b">{cita.fecha}</td>
+              <td class="py-2 px-4 border-b">{cita.estado}</td>
+              <td class="py-2 px-4 border-b">
+                <button class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Editar</button>
+                <button class="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Eliminar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      
+      {/* Agrega scripts TypeScript si es necesario */}
+      <script type="module">
+        // Puedes agregar lógica adicional aquí si lo necesitas
+      </script>
+    </main>
+  </div>
+</Layout>

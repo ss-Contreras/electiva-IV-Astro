@@ -1,11 +1,36 @@
 ---
-import { db, Pacientes } from "astro:db";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
 
-const pacientes = await db.select().from(Pacientes);
+const pacientes = [
+  {
+    id: 1,
+    nombre: "Juan Pérez",
+    cedula: "1234567890",
+    edad: 30,
+    fechaCita: "2024-10-15",
+    pacienteNuevo: true,
+    pacienteRecomendado: false,
+    motivoConsulta: "Revisión general",
+    rutaImagenes: "/images/juan_perez.jpg", 
+  },
+  {
+    id: 2,
+    nombre: "María López",
+    cedula: "0987654321",
+    edad: 25,
+    fechaCita: "2024-10-20",
+    pacienteNuevo: false,
+    pacienteRecomendado: true,
+    motivoConsulta: "Dolor de cabeza",
+    rutaImagenes: "/images/juan_perez.jpg",
+  },
+];
 ---
 
 <Layout title="Citas">
+<Header />
   <main class="relative overflow-hidden">
     <div class="mx-auto max-w-6xl px-6 lg:px-8">
       <div class="mt-16 sm:mt-12">
@@ -38,7 +63,7 @@ const pacientes = await db.select().from(Pacientes);
                       <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteRecomendado ? 'Sí' : 'No'}</td>
                       <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.motivoConsulta}</td>
                       <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
-                        <img src={paciente.rutaImagenes} alt="imagen" />
+                        <img src={paciente.rutaImagenes} alt={`Imagen de ${paciente.nombre}`} class="w-16 h-16 object-cover rounded-full mx-auto" />
                       </td>
                     </tr>
                   ))}
@@ -50,7 +75,8 @@ const pacientes = await db.select().from(Pacientes);
       </div>
     </div>
     <div class="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">
-      <h1 class="max-w-4xl text-5xl font-bold md:text-6xl lg:text-3xl">Buscar paciente  </h1>
+      <h1 class="max-w-4xl text-5xl font-bold md:text-6xl lg:text-3xl">Buscar paciente</h1>
     </div>
   </main>
+  <Footer/>
 </Layout>

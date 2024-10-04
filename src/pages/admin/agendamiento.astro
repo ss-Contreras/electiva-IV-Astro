@@ -1,0 +1,20 @@
+---
+import Sidebar from "../../components/Sidebar.astro";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Administrador - Agendamientos">
+  <div class="flex min-h-screen">
+    {/* Sidebar */}
+    <Sidebar/>
+
+    {/* Main Content */}
+    <main class="flex-1 p-8 bg-gray-100">
+      <h1 class="text-3xl font-bold mb-4">Gestión de Agendamientos</h1>
+      <p class="text-gray-700">
+        Aquí puedes gestionar los agendamientos de los pacientes.
+      </p>
+      {/* Agrega aquí tus componentes o formularios para gestionar los agendamientos */}
+    </main>
+  </div>
+</Layout>
