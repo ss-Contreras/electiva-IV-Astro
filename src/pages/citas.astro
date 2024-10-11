@@ -53,20 +53,18 @@ const pacientes = [
                   </tr>
                 </thead>
                 <tbody class="animate__animated animate__fadeIn">
-                  {pacientes.map((paciente) => (
                     <tr class="hover:bg-gray-100 transition-colors duration-200">
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.nombre}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.cedula}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.edad}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{new Date(paciente.fechaCita).toLocaleDateString()}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteNuevo ? 'Sí' : 'No'}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteRecomendado ? 'Sí' : 'No'}</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.motivoConsulta}</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Juan Pérez</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">1234567890</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">30</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">14/10/2024</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Si</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">No</td>
+                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Me duele una muela</td>
                       <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
-                        <img src={paciente.rutaImagenes} alt={`Imagen de ${paciente.nombre}`} class="w-16 h-16 object-cover rounded-full mx-auto" />
+                        <img src="/images/juan_perez.jpg" alt=paciente class="w-16 h-16 object-cover rounded-full mx-auto" />
                       </td>
                     </tr>
-                  ))}
                 </tbody>
               </table>
             </div>
@@ -74,8 +72,11 @@ const pacientes = [
         </div>
       </div>
     </div>
-    <div class="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">
-      <h1 class="max-w-4xl text-5xl font-bold md:text-6xl lg:text-3xl">Buscar paciente</h1>
+
+    <div>
+      <h1 class="mt-10">
+
+      </h1>
     </div>
   </main>
   <Footer/>

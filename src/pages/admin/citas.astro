@@ -2,11 +2,29 @@
 import Sidebar from "../../components/Sidebar.astro";
 import Layout from "../../layouts/Layout.astro";
 
-// Ejemplo de componente interactivo con TypeScript
-const citas = [
-  { id: 1, paciente: "Juan Pérez", fecha: "2024-10-15", estado: "Pendiente" },
-  { id: 2, paciente: "María López", fecha: "2024-10-20", estado: "Confirmada" },
-  // Agrega más citas según sea necesario
+const pacientes = [
+  {
+    id: 1,
+    nombre: "Juan Pérez",
+    cedula: "1234567890",
+    edad: 30,
+    fechaCita: "2024-10-15",
+    pacienteNuevo: true,
+    pacienteRecomendado: false,
+    motivoConsulta: "Revisión general",
+    rutaImagenes: "/images/juan_perez.jpg", 
+  },
+  {
+    id: 2,
+    nombre: "María López",
+    cedula: "0987654321",
+    edad: 25,
+    fechaCita: "2024-10-20",
+    pacienteNuevo: false,
+    pacienteRecomendado: true,
+    motivoConsulta: "Dolor de cabeza",
+    rutaImagenes: "/images/juan_perez.jpg",
+  },
 ];
 ---
 <Layout title="Administrador - Citas">
@@ -22,31 +40,50 @@ const citas = [
       </p>
       
       {/* Tabla de Citas */}
-      <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
-        <thead>
-          <tr>
-            <th class="py-2 px-4 border-b">ID</th>
-            <th class="py-2 px-4 border-b">Paciente</th>
-            <th class="py-2 px-4 border-b">Fecha</th>
-            <th class="py-2 px-4 border-b">Estado</th>
-            <th class="py-2 px-4 border-b">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {citas.map((cita) => (
-            <tr class="text-center">
-              <td class="py-2 px-4 border-b">{cita.id}</td>
-              <td class="py-2 px-4 border-b">{cita.paciente}</td>
-              <td class="py-2 px-4 border-b">{cita.fecha}</td>
-              <td class="py-2 px-4 border-b">{cita.estado}</td>
-              <td class="py-2 px-4 border-b">
-                <button class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Editar</button>
-                <button class="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      
+        <div class="mx-auto max-w-6xl px-6 lg:px-8">
+          <div class="mt-16 sm:mt-12">
+            <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <div class="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+                <h1 class="text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-8">Lista de Citas</h1>
+                
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-white border border-gray-300">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Nombre</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Cédula</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Edad</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Fecha de la Cita</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Paciente Nuevo</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Recomendado</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Motivo de Consulta</th>
+                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Imagen</th>
+                      </tr>
+                    </thead>
+                    <tbody class="animate__animated animate__fadeIn">
+                      {pacientes.map((paciente) => (
+                        <tr class="hover:bg-gray-100 transition-colors duration-200">
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.nombre}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.cedula}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.edad}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{new Date(paciente.fechaCita).toLocaleDateString()}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteNuevo ? 'Sí' : 'No'}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteRecomendado ? 'Sí' : 'No'}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.motivoConsulta}</td>
+                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
+                            <img src={paciente.rutaImagenes} alt={`Imagen de ${paciente.nombre}`} class="w-16 h-16 object-cover rounded-full mx-auto" />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       
       {/* Agrega scripts TypeScript si es necesario */}
       <script type="module">
