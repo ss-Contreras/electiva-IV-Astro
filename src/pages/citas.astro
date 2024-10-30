@@ -1,83 +1,25 @@
 ---
 import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
+import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
-
-const pacientes = [
-  {
-    id: 1,
-    nombre: "Juan Pérez",
-    cedula: "1234567890",
-    edad: 30,
-    fechaCita: "2024-10-15",
-    pacienteNuevo: true,
-    pacienteRecomendado: false,
-    motivoConsulta: "Revisión general",
-    rutaImagenes: "/images/juan_perez.jpg", 
-  },
-  {
-    id: 2,
-    nombre: "María López",
-    cedula: "0987654321",
-    edad: 25,
-    fechaCita: "2024-10-20",
-    pacienteNuevo: false,
-    pacienteRecomendado: true,
-    motivoConsulta: "Dolor de cabeza",
-    rutaImagenes: "/images/juan_perez.jpg",
-  },
-];
+import ListaCitasComponent from "../components/pages/ListaCitasComponent";
 ---
 
 <Layout title="Citas">
-<Header />
+  <Header />
   <main class="relative overflow-hidden">
-    <div class="mx-auto max-w-6xl px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mt-16 sm:mt-12">
         <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-          <div class="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-            <h1 class="text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-8">Lista de Citas</h1>
-            
-            <div class="overflow-x-auto">
-              <table class="min-w-full bg-white border border-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Nombre</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Cédula</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Edad</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Fecha de la Cita</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Paciente Nuevo</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Recomendado</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Motivo de Consulta</th>
-                    <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Imagen</th>
-                  </tr>
-                </thead>
-                <tbody class="animate__animated animate__fadeIn">
-                    <tr class="hover:bg-gray-100 transition-colors duration-200">
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Juan Pérez</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">1234567890</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">30</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">14/10/2024</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Si</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">No</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">Me duele una muela</td>
-                      <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
-                        <img src="/images/juan_perez.jpg" alt=paciente class="w-16 h-16 object-cover rounded-full mx-auto" />
-                      </td>
-                    </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <!-- Aquí insertamos el componente de la lista de citas -->
+          <ListaCitasComponent client:load />
         </div>
       </div>
     </div>
 
     <div>
-      <h1 class="mt-10">
-
-      </h1>
+      <h1 class="mt-10"></h1>
     </div>
   </main>
-  <Footer/>
+  <Footer />
 </Layout>

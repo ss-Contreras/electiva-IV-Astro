@@ -1,36 +1,17 @@
 ---
-import Sidebar from "../components/Sidebar.astro";
+import Sidebar from "../components/Sidebar";
 import Layout from "../layouts/Layout.astro";
+import DashboardComponent from "../components/pages/DashboardComponent";
 ---
+
 <Layout title="Administrador">
   <div class="flex min-h-screen bg-gray-100">
-    {/* Sidebar */}
+    <!-- Sidebar -->
     <Sidebar />
-    
-    {/* Main Content */}
-    <main class="flex-1 p-8 bg-white ml-64">
-      <div class="max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold mb-6 text-gray-800">Panel de Administración</h1>
-        <p class="text-lg text-gray-600 mb-8">
-          Bienvenido al panel de administración. Selecciona una opción del menú para comenzar.
-        </p>
-        
-        {/* Sección de Resumen */}
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
-          <h2 class="text-2xl font-semibold mb-4 text-gray-800">Resumen</h2>
-          <p class="text-gray-700">
-            Aquí encontrarás un resumen de las actividades recientes, citas programadas y más información relevante para gestionar el consultorio odontológico de manera eficiente.
-          </p>
-        </div>
-        
-        {/* Sección Adicional */}
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <h2 class="text-2xl font-semibold mb-4 text-gray-800">Estadísticas</h2>
-          <p class="text-gray-700">
-            Pronto podrás ver estadísticas detalladas sobre las citas, pacientes y radiografías.
-          </p>
-        </div>
-      </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 bg-gray-100 ml-64">
+      <DashboardComponent client:load />
     </main>
   </div>
 </Layout>

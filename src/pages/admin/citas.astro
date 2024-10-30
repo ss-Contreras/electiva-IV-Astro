@@ -1,46 +1,62 @@
 ---
-import Sidebar from "../../components/Sidebar.astro";
+import Sidebar from "../../components/Sidebar";
 import Layout from "../../layouts/Layout.astro";
 
-const pacientes = [
-  {
-    id: 1,
-    nombre: "Juan Pérez",
-    cedula: "1234567890",
-    edad: 30,
-    fechaCita: "2024-10-15",
-    pacienteNuevo: true,
-    pacienteRecomendado: false,
-    motivoConsulta: "Revisión general",
-    rutaImagenes: "/images/juan_perez.jpg", 
-  },
-  {
-    id: 2,
-    nombre: "María López",
-    cedula: "0987654321",
-    edad: 25,
-    fechaCita: "2024-10-20",
-    pacienteNuevo: false,
-    pacienteRecomendado: true,
-    motivoConsulta: "Dolor de cabeza",
-    rutaImagenes: "/images/juan_perez.jpg",
-  },
-];
+// Definimos la interfaz Paciente
+interface Paciente {
+  id: number;
+  nombre: string;
+  cedula: string;
+  edad: number;
+  fechaCita: string;
+  pacienteNuevo: boolean;
+  pacienteRecomendado: boolean;
+  motivoConsulta: string;
+  rutaImagenes: string;
+}
+
+let pacientes: Paciente[] = [];
+let error: string | null = null;
+
+try {
+  const response = await fetch('https://localhost:7027/api/pacientes');
+  if (!response.ok) {
+    throw new Error('Error al obtener los pacientes');
+  }
+  pacientes = await response.json();
+} catch (err) {
+  error = 'No se pudo cargar los pacientes. Intente nuevamente.';
+}
 ---
 <Layout title="Administrador - Citas">
   <div class="flex min-h-screen">
-    {/* Sidebar */}
+    <!-- Sidebar -->
     <Sidebar/>
 
-    {/* Main Content */}
     <main class="flex-1 p-8 bg-gray-100 ml-64">
       <h1 class="text-3xl font-bold mb-4">Gestión de Citas</h1>
       <p class="text-gray-700 mb-6">
         Aquí puedes gestionar todas las citas programadas.
       </p>
       
-      {/* Tabla de Citas */}
-      
+      <!-- Mensaje de error -->
+      {error && (
+        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span>{error}</span>
+          <span
+            class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
+          >
+            ×
+          </span>
+        </div>
+      )}
+
+      <!-- Tabla de Citas -->
+      {pacientes.length === 0 ? (
+        <div class="text-center mt-10">
+          <p class="mt-4 text-gray-600">No hay pacientes para mostrar.</p>
+        </div>
+      ) : (
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <div class="mt-16 sm:mt-12">
             <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
@@ -83,12 +99,7 @@ const pacientes = [
             </div>
           </div>
         </div>
-
-      
-      {/* Agrega scripts TypeScript si es necesario */}
-      <script type="module">
-        // Puedes agregar lógica adicional aquí si lo necesitas
-      </script>
+      )}
     </main>
   </div>
 </Layout>
