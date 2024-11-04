@@ -6,7 +6,7 @@ interface Paciente {
   nombre: string;
   cedula: string;
   edad: number;
-  historial: string;
+  // historial: string;
 }
 
 const PacienteComponent: React.FC = () => {
@@ -21,7 +21,7 @@ const PacienteComponent: React.FC = () => {
     nombre: '',
     cedula: '',
     edad: 0,
-    historial: '',
+    // historial: '',
   });
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const PacienteComponent: React.FC = () => {
 
       if (response.ok) {
         await fetchPacientes();
-        setFormData({ id: 0, nombre: '', cedula: '', edad: 0, historial: '' });
+        setFormData({ id: 0, nombre: '', cedula: '', edad: 0 });
         setIsEditing(false);
       } else {
         throw new Error('Error al guardar el paciente');
@@ -175,7 +175,7 @@ const PacienteComponent: React.FC = () => {
                 <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Nombre</th>
                 <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Cédula</th>
                 <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Edad</th>
-                <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Historial</th>
+                {/* <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Historial</th> */}
                 <th className="py-3 px-4 border-b bg-gray-50 text-gray-800">Acciones</th>
               </tr>
             </thead>
@@ -195,7 +195,7 @@ const PacienteComponent: React.FC = () => {
                     <td className="py-4 px-4 border-b">{paciente.nombre}</td>
                     <td className="py-4 px-4 border-b">{paciente.cedula}</td>
                     <td className="py-4 px-4 border-b">{paciente.edad}</td>
-                    <td className="py-4 px-4 border-b">{paciente.historial}</td>
+                    {/* <td className="py-4 px-4 border-b">{paciente.historial}</td> */}
                     <td className="py-4 px-4 border-b">
                       <button
                         onClick={() => handleEdit(paciente)}
@@ -265,7 +265,7 @@ const PacienteComponent: React.FC = () => {
               min="0"
             />
           </div>
-          <div>
+          {/* <div>
             <label className="block mb-2 text-gray-600">Historial</label>
             <textarea
               name="historial"
@@ -276,7 +276,7 @@ const PacienteComponent: React.FC = () => {
               required
               rows={4}
             />
-          </div>
+          </div> */}
         </div>
         <button
           type="submit"
@@ -291,7 +291,7 @@ const PacienteComponent: React.FC = () => {
             className="mt-6 ml-4 bg-gray-500 text-white px-8 py-3 rounded-xl hover:bg-gray-600 transition duration-300"
             onClick={() => {
               setIsEditing(false);
-              setFormData({ id: 0, nombre: '', cedula: '', edad: 0, historial: '' });
+              setFormData({ id: 0, nombre: '', cedula: '', edad: 0});
             }}
             disabled={actionLoading}
           >

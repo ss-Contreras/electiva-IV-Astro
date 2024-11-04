@@ -1,105 +1,16 @@
 ---
 import Sidebar from "../../components/Sidebar";
 import Layout from "../../layouts/Layout.astro";
-
-// Definimos la interfaz Paciente
-interface Paciente {
-  id: number;
-  nombre: string;
-  cedula: string;
-  edad: number;
-  fechaCita: string;
-  pacienteNuevo: boolean;
-  pacienteRecomendado: boolean;
-  motivoConsulta: string;
-  rutaImagenes: string;
-}
-
-let pacientes: Paciente[] = [];
-let error: string | null = null;
-
-try {
-  const response = await fetch('https://localhost:7027/api/pacientes');
-  if (!response.ok) {
-    throw new Error('Error al obtener los pacientes');
-  }
-  pacientes = await response.json();
-} catch (err) {
-  error = 'No se pudo cargar los pacientes. Intente nuevamente.';
-}
+import CitaComponent from '../../components/pages/CitaComponent';
 ---
-<Layout title="Administrador - Citas">
+  
+<Layout title="Administrador - Gestión de Citas">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <Sidebar/>
-
+    <!-- Main Content -->
     <main class="flex-1 p-8 bg-gray-100 ml-64">
-      <h1 class="text-3xl font-bold mb-4">Gestión de Citas</h1>
-      <p class="text-gray-700 mb-6">
-        Aquí puedes gestionar todas las citas programadas.
-      </p>
-      
-      <!-- Mensaje de error -->
-      {error && (
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <span>{error}</span>
-          <span
-            class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
-          >
-            ×
-          </span>
-        </div>
-      )}
-
-      <!-- Tabla de Citas -->
-      {pacientes.length === 0 ? (
-        <div class="text-center mt-10">
-          <p class="mt-4 text-gray-600">No hay pacientes para mostrar.</p>
-        </div>
-      ) : (
-        <div class="mx-auto max-w-6xl px-6 lg:px-8">
-          <div class="mt-16 sm:mt-12">
-            <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <div class="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-                <h1 class="text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-8">Lista de Citas</h1>
-                
-                <div class="overflow-x-auto">
-                  <table class="min-w-full bg-white border border-gray-300">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Nombre</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Cédula</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Edad</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Fecha de la Cita</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Paciente Nuevo</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Recomendado</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Motivo de Consulta</th>
-                        <th class="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">Imagen</th>
-                      </tr>
-                    </thead>
-                    <tbody class="animate__animated animate__fadeIn">
-                      {pacientes.map((paciente) => (
-                        <tr class="hover:bg-gray-100 transition-colors duration-200">
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.nombre}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.cedula}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.edad}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{new Date(paciente.fechaCita).toLocaleDateString()}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteNuevo ? 'Sí' : 'No'}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.pacienteRecomendado ? 'Sí' : 'No'}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">{paciente.motivoConsulta}</td>
-                          <td class="text-center px-6 py-4 border-b border-gray-200 text-gray-900">
-                            <img src={paciente.rutaImagenes} alt={`Imagen de ${paciente.nombre}`} class="w-16 h-16 object-cover rounded-full mx-auto" />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <CitaComponent client:load />
     </main>
   </div>
 </Layout>
