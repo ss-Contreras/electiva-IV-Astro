@@ -196,17 +196,17 @@ const PacienteComponent: React.FC = () => {
                     <td className="py-4 px-4 border-b">{paciente.cedula}</td>
                     <td className="py-4 px-4 border-b">{paciente.edad}</td>
                     {/* <td className="py-4 px-4 border-b">{paciente.historial}</td> */}
-                    <td className="py-4 px-4 border-b">
+                    <td className="py-4 px-4 border-b flex justify-center">
                       <button
                         onClick={() => handleEdit(paciente)}
-                        className="bg-yellow-500 text-white px-4 py-2 border rounded-3xl mr-2 hover:bg-yellow-600 transition-colors  items-center"
+                        className="bg-yellow-500 text-white px-4 py-2 border rounded-3xl mr-2 hover:bg-yellow-600 transition-colors flex items-center"
                       >
                         <FiEdit className="mr-2" />
                         Editar
                       </button>
                       <button
                         onClick={() => handleDelete(paciente.id)}
-                        className="bg-red-500 text-white px-4 py-2 border rounded-3xl hover:bg-red-600 transition-colors items-center"
+                        className="bg-red-500 text-white px-4 py-2 border rounded-3xl hover:bg-red-600 transition-colors flex items-center"
                       >
                         <FiTrash2 className="mr-2" />
                         Eliminar
