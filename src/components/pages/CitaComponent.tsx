@@ -96,7 +96,7 @@ const CitaComponent: React.FC = () => {
 
   const fetchCitas = async (search: string = '') => {
     try {
-      const url = 'http://sonrisasbackendelectivaiv.somee.com/api/citas';
+      const url = 'https://sonrisasbackendelectivaiv.somee.com/api/citas';
       const response = await fetch(url);
 
       let responseData: any;
@@ -142,7 +142,7 @@ const CitaComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/paciente');
+      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/paciente');
 
       let responseData: any;
       const contentType = response.headers.get('content-type');
@@ -173,7 +173,7 @@ const CitaComponent: React.FC = () => {
 
   const fetchOdontologos = async () => {
     try {
-      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/odontologo');
+      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/odontologo');
 
       let responseData: any;
       const contentType = response.headers.get('content-type');
@@ -257,7 +257,7 @@ const CitaComponent: React.FC = () => {
     e.preventDefault();
     setActionLoading(true);
     try {
-      const url = 'http://sonrisasbackendelectivaiv.somee.com/api/citas';
+      const url = 'https://sonrisasbackendelectivaiv.somee.com/api/citas';
 
       const payload = {
         fecha: formatDateToISO(formCreate.fecha),
@@ -339,7 +339,7 @@ const CitaComponent: React.FC = () => {
         odontologoId: formEdit.odontologoId,
       };
 
-      const url = `http://sonrisasbackendelectivaiv.somee.com/api/citas/${citaToEdit.id}`;
+      const url = `https://sonrisasbackendelectivaiv.somee.com/api/citas/${citaToEdit.id}`;
 
       const response = await fetch(url, {
         method: 'PUT',
@@ -392,7 +392,7 @@ const CitaComponent: React.FC = () => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
     setActionLoading(true);
     try {
-      const url = `http://sonrisasbackendelectivaiv.somee.com/api/citas/${id}`;
+      const url = `https://sonrisasbackendelectivaiv.somee.com/api/citas/${id}`;
       const response = await fetch(url, {
         method: 'DELETE',
       });
