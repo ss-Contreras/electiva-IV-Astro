@@ -5,52 +5,97 @@ import { Button } from '../ui/button';
 
 interface Cita {
   id: number;
+  estado: string;
+  fecha: string;
+  motivo: string;
+  nombreOdontologo: string;
+  nombrePaciente: string;
+  correoElectronicoPaciente: string;
+  rutaImagen?: string; 
+  pacienteId: number;
+}
+
+interface Paciente {
+  id: number;
   nombre: string;
+  cedula: string;
+  edad: number;
   fechaCita: string;
+  nuevoPaciente: string;
+  pacienteRecomendado: string;
   motivoConsulta: string;
+  rutaImagen: string;
+  rutaLocalImagen: string;
+  telefono: string;
+  correoElectronico: string;
+  direccion: string;
   nombreOdontologo: string;
 }
 
 const DashboardComponent: React.FC = () => {
   const [citasProximas, setCitasProximas] = useState<Cita[]>([]);
+  const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [totalPacientes, setTotalPacientes] = useState<number>(0);
   const [totalCitas, setTotalCitas] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchDashboardData = async () => {
+  // obtener los datos de los pacientes
+  const fetchPacienteData = async () => {
     try {
       const response = await axios.get('https://localhost:7027/api/paciente');
       if (response.status === 200) {
-        const pacientes = response.data;
-        setTotalPacientes(pacientes.length);
-        setTotalCitas(pacientes.length); // Asumiendo que cada paciente tiene una cita
+        const pacientesData = response.data;
+        setPacientes(pacientesData);
+        setTotalPacientes(pacientesData.length);
+        return pacientesData; // Devuelve los datos de pacientes
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos de los pacientes:', error);
+    }
+    return []; // Retorna un array vacío en caso de error
+  };
 
-        // Filtrar citas próximas (por ejemplo, próximas 7 días)
+  // obtener los datos de las citas
+  const fetchCitaData = async (pacientesData: Paciente[]) => {
+    try {
+      const response = await axios.get('https://localhost:7027/api/citas');
+      if (response.status === 200) {
+        const citasData = response.data;
+        setTotalCitas(citasData.length);
+
         const ahora = new Date();
         const enSieteDias = new Date();
         enSieteDias.setDate(ahora.getDate() + 7);
 
-        const proximas = pacientes.filter((paciente: any) => {
-          const fechaCita = new Date(paciente.fechaCita);
+        const proximas = citasData.filter((cita: any) => {
+          const fechaCita = new Date(cita.fecha);
           return fechaCita >= ahora && fechaCita <= enSieteDias;
         });
 
-        // Ordenar por fecha
-        proximas.sort((a: any, b: any) => new Date(a.fechaCita).getTime() - new Date(b.fechaCita).getTime());
+        // Asociar la imagen de cada paciente a la cita correspondiente
+        const citasConImagen = proximas.map((cita: Cita) => {
+          const paciente = pacientesData.find((p) => p.id === cita.pacienteId);
+          return { ...cita, rutaImagen: paciente?.rutaImagen };
+        });
 
-        setCitasProximas(proximas);
+        // Ordenar por fecha
+        citasConImagen.sort((a: Cita, b: Cita) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+
+        setCitasProximas(citasConImagen);
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error al obtener los datos del dashboard:', error);
+      console.error('Error al obtener los datos de las citas:', error);
       setLoading(false);
     }
   };
 
+  // Cargar datos de pacientes y citas al montar el componente
   useEffect(() => {
-    fetchDashboardData();
+    fetchPacienteData().then((pacientesData) => {
+      fetchCitaData(pacientesData);
+    });
   }, []);
-
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-4xl font-bold mb-6 text-gray-800">Panel de Administración</h1>
@@ -66,11 +111,11 @@ const DashboardComponent: React.FC = () => {
           </div>
           <div className="ml-4">
             <h2 className="text-2xl font-semibold text-gray-800">{totalPacientes}</h2>
-            <p className="text-gray-600">Total de Pacientes</p>
+            <p className="font-semibold">Total de Pacientes</p>
             <Button
               className='transition-colors rounded border font-semibold border-b-slate-400'>
               <a href='admin/pacientes'>
-              Ver pacientes
+                Ver pacientes
               </a>
             </Button>
           </div>
@@ -81,10 +126,12 @@ const DashboardComponent: React.FC = () => {
           </div>
           <div className="ml-4">
             <h2 className="text-2xl font-semibold text-gray-800">{totalCitas}</h2>
-            <p className="text-gray-600">Total de Citas</p>
+            <p className="font-semibold">Total de Citas</p>
             <Button
               className='transition-colors rounded border font-semibold border-b-slate-400'>
-              Ver citas
+              <a href='admin/citas'>
+                Ver citas
+              </a>
             </Button>
           </div>
         </div>
@@ -94,26 +141,47 @@ const DashboardComponent: React.FC = () => {
           </div>
           <div className="ml-4">
             <h2 className="text-2xl font-semibold text-gray-800">{citasProximas.length}</h2>
-            <p className="text-gray-600">Citas Próximas</p>
+            <p className="font-semibold">Citas Próximas</p>
           </div>
         </div>
       </div>
 
-      {/* Recordatorios de Citas Próximas */}
+      {/* Citas Próximas */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Citas Próximas</h2>
-        {loading ? (
+        {loading ? (  
           <p>Cargando citas...</p>
         ) : citasProximas.length > 0 ? (
           <ul className="divide-y divide-gray-200">
             {citasProximas.slice(0, 5).map((cita) => (
               <li key={cita.id} className="py-4 flex items-center">
+                {cita.rutaImagen && (
+                  <img
+                    src={`https://localhost:7027${cita.rutaImagen}`}
+                    alt={cita.nombrePaciente}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                )}
                 <div className="ml-3">
-                  <p className="text-lg font-medium text-gray-900">{cita.nombre}</p>
+                  <p className="text-lg font-medium text-gray-900">{cita.estado}</p>
+                  <p className="text-lg font-medium text-gray-500">{cita.nombrePaciente}</p>
+                  <p className="text-lg font-medium text-gray-500">{cita.correoElectronicoPaciente}</p>
                   <p className="text-sm text-gray-500">
-                    {new Date(cita.fechaCita).toLocaleDateString()} - {cita.motivoConsulta}
+                    {new Date(cita.fecha).toLocaleDateString('es-ES', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    <span>Hora programada: </span>
+                    {new Date(cita.fecha).toLocaleTimeString('es-ES', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </p>
                   <p className="text-sm text-gray-500">Odontólogo: {cita.nombreOdontologo}</p>
+                  <p className="text-sm text-gray-500">Motivo: {cita.motivo}</p>
                 </div>
               </li>
             ))}
@@ -121,14 +189,6 @@ const DashboardComponent: React.FC = () => {
         ) : (
           <p>No hay citas programadas para los próximos días.</p>
         )}
-      </div>
-
-      {/* Sección de Estadísticas */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Estadísticas</h2>
-        <p className="text-gray-700">
-          Pronto podrás ver estadísticas detalladas sobre las citas, pacientes y radiografías.
-        </p>
       </div>
     </div>
   );

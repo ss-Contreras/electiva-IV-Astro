@@ -1,0 +1,15 @@
+---
+import Sidebar from "../../components/Sidebar";
+import Layout from "../../layouts/Layout.astro";
+import OdontologosComponent from "../../components/pages/OdontologosComponent";
+---
+<Layout title="Administrador - Gestión de Pacientes">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <Sidebar/>
+    <!-- Main Content -->
+    <main class="flex-1 p-8 bg-gray-100 ml-64">
+      <OdontologosComponent client:load />
+    </main>
+  </div>
+</Layout>

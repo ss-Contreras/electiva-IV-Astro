@@ -30,20 +30,20 @@ const Sidebar = (props: Props) => {
             Citas
           </a>
         </li>
-        <li>
+        {/* <li>
           <a href="/admin/pacientes" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             Pacientes
           </a>
-        </li>
+        </li> */}
         <li>
-          <a href="/admin/agendamiento" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+          <a href="/admin/odontologos" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-5 4v-4m0 0l-3 3m3-3l3 3" />
             </svg>
-            Agendamientos
+            Odontologos
           </a>
         </li>
         <li>
@@ -67,11 +67,11 @@ const Sidebar = (props: Props) => {
   
     {/* Botón "Volver" */}
     <div className="p-6 border-t border-blue-700">
-      <a href="/" className="w-full flex items-center justify-center p-3 rounded-lg bg-blue-800 hover:bg-blue-700 transition-colors">
+      <a href="/admin" className="w-full flex items-center justify-center p-3 rounded-lg bg-blue-800 hover:bg-blue-700 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        Volver
+        Admin
       </a>
     </div>
   </aside>
