@@ -24,6 +24,7 @@ const ListaCitasComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const itemsPerPage = 4;
 
   const fetchPacientes = async () => {
@@ -44,14 +45,20 @@ const ListaCitasComponent: React.FC = () => {
     fetchPacientes();
   }, []);
 
+  // Filtrar pacientes basados en el término de búsqueda
+  const filteredPacientes = pacientes.filter((paciente) =>
+    paciente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    paciente.cedula.includes(searchTerm)
+  );
+
   // Calcular los pacientes de la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPacientes = pacientes.slice(indexOfFirstItem, indexOfLastItem);
+  const currentPacientes = filteredPacientes.slice(indexOfFirstItem, indexOfLastItem);
 
   // Manejar la paginación
   const handleNextPage = () => {
-    if (currentPage < Math.ceil(pacientes.length / itemsPerPage)) {
+    if (currentPage < Math.ceil(filteredPacientes.length / itemsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -62,13 +69,28 @@ const ListaCitasComponent: React.FC = () => {
     }
   };
 
+  // Manejar el cambio en el campo de búsqueda
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reiniciar a la primera página cuando se realiza una búsqueda
+  };
+
   return (
     <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-6">
       <h1 className="text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-8">
         Lista de Citas
       </h1>
       <div className="flex justify-between items-center mt-8 mb-4">
-        <span className="text-gray-700">Página {currentPage} de {Math.ceil(pacientes.length / itemsPerPage)}</span>
+        <input
+          type="text"
+          placeholder="Buscar por nombre o cédula..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="border rounded-lg px-4 py-2 w-full max-w-xs text-sm "
+        />
+        <span className="text-gray-700 ml-4">
+          Página {currentPage} de {Math.ceil(filteredPacientes.length / itemsPerPage)}
+        </span>
         <div className="space-x-4">
           <Button
             onClick={handlePreviousPage}
@@ -80,7 +102,7 @@ const ListaCitasComponent: React.FC = () => {
           </Button>
           <Button
             onClick={handleNextPage}
-            disabled={currentPage === Math.ceil(pacientes.length / itemsPerPage)}
+            disabled={currentPage === Math.ceil(filteredPacientes.length / itemsPerPage)}
             variant="outline"
             className="px-4 py-2 rounded disabled:opacity-50"
           >

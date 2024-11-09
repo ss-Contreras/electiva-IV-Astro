@@ -280,37 +280,40 @@ const AgendamientoComponent: React.FC = () => {
                 />
               </div>
             )}
-            <label className="mb-2 font-semibold block mt-4">Dirección</label>
-            <input
-              className="border rounded-md px-2 py-2 w-full text-sm"
-              type="text"
-              name="direccion"
-              placeholder="Dirección"
-              value={formData.direccion}
-              onChange={handleInputChange}
-              required
-            />
-            <label className="mb-2 font-semibold block mt-4">Odontólogo</label>
-            <select
-              className="border rounded-md px-2 py-2 w-full text-sm"
-              name="odontologoId"
-              value={formData.odontologoId}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Seleccione un odontólogo</option>
-              {odontologos.map((odontologo) => (
-                <option key={odontologo.id} value={odontologo.id}>
-                  {odontologo.nombre}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
+        {/* Inputs de Dirección y Odontólogo después de los otros inputs */}
+        <div className="grid grid-cols-1 gap-y-6 mt-6">
+          <label className="mb-2 font-semibold block">Dirección</label>
+          <input
+            className="border rounded-md px-2 py-2 w-full text-sm"
+            type="text"
+            name="direccion"
+            placeholder="Dirección"
+            value={formData.direccion}
+            onChange={handleInputChange}
+            required
+          />
+          <label className="mb-2 font-semibold block mt-4">Odontólogo</label>
+          <select
+            className="border rounded-md px-2 py-2 w-full text-sm"
+            name="odontologoId"
+            value={formData.odontologoId}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Seleccione un odontólogo</option>
+            {odontologos.map((odontologo) => (
+              <option key={odontologo.id} value={odontologo.id}>
+                {odontologo.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
-          <label className="mb-2 font-semibold block">Motivo de la consulta</label>
+          <label className="mb-2 font-semibold block mt-6">Motivo de la consulta</label>
           <textarea
-            className="border rounded-md px-4 py-2 w-full text-sm"
+            className="border rounded-md px-4 py-2 w-full text-sm resize-none"
             placeholder="Motivo"
             name="motivoConsulta"
             value={formData.motivoConsulta}
@@ -358,7 +361,6 @@ const AgendamientoComponent: React.FC = () => {
         )}
       </form>
     </div>
-    
   );
 };
 

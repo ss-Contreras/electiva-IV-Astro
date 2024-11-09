@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+// src/components/CitaComponent.tsx
+
+import React, { useState, useEffect, type FormEvent } from 'react';
 import Select from 'react-select';
 import Modal from 'react-modal';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-// import { Tooltip } from 'react-tooltip'; // Asegúrate de instalar react-tooltip si deseas usar tooltips
+import { FiEdit, FiTrash2, FiLoader } from 'react-icons/fi';
+import { AiOutlineClose } from 'react-icons/ai';
 import '../../styles/global.css';
 
 interface Paciente {
@@ -69,6 +71,10 @@ const CitaComponent: React.FC = () => {
     pacienteId: null,
     odontologoId: null,
   });
+
+  // Paginación
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const recordsPerPage = 5;
 
   useEffect(() => {
     Modal.setAppElement('#root');
@@ -222,7 +228,7 @@ const CitaComponent: React.FC = () => {
   };
 
   // Manejo de cambios en el formulario de Editar
-  const handleEditInputChange = (
+  const handleEditInputChangeForm = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
@@ -247,7 +253,7 @@ const CitaComponent: React.FC = () => {
   };
 
   // Función para crear una nueva cita
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreateCita = async (e: React.FormEvent) => {
     e.preventDefault();
     setActionLoading(true);
     try {
@@ -260,8 +266,6 @@ const CitaComponent: React.FC = () => {
         pacienteId: formCreate.pacienteId,
         odontologoId: formCreate.odontologoId,
       };
-
-      console.log('Payload enviado al servidor:', payload);
 
       const response = await fetch(url, {
         method: 'POST',
@@ -289,7 +293,6 @@ const CitaComponent: React.FC = () => {
           pacienteId: null,
           odontologoId: null,
         });
-        // Opcional: Mostrar mensaje de éxito
         setError(null);
       } else {
         let errorMessage = 'Error al guardar la cita';
@@ -314,7 +317,7 @@ const CitaComponent: React.FC = () => {
     setFormEdit({
       fecha: formatDateToInput(cita.fecha),
       estado: cita.estado,
-      motivo: cita.motivo, // Asegurarse de que coincide con el nombre del campo
+      motivo: cita.motivo,
       pacienteId: cita.pacienteId,
       odontologoId: cita.odontologoId,
     });
@@ -331,12 +334,10 @@ const CitaComponent: React.FC = () => {
         id: citaToEdit.id,
         fecha: formatDateToISO(formEdit.fecha),
         estado: formEdit.estado,
-        motivo: formEdit.motivo, // Asegurarse de que coincide con el nombre del campo
+        motivo: formEdit.motivo,
         pacienteId: formEdit.pacienteId,
         odontologoId: formEdit.odontologoId,
       };
-
-      console.log('Payload enviado al servidor:', payload);
 
       const url = `https://localhost:7027/api/citas/${citaToEdit.id}`;
 
@@ -357,8 +358,6 @@ const CitaComponent: React.FC = () => {
         responseData = await response.text();
       }
 
-      console.log('Respuesta del servidor:', responseData);
-
       if (response.ok) {
         await fetchCitas(searchTerm);
         setIsEditModalOpen(false);
@@ -378,11 +377,10 @@ const CitaComponent: React.FC = () => {
         } else if (responseData && responseData.message) {
           errorMessage = responseData.message;
         }
-        console.error('Error del servidor:', responseData);
         throw new Error(errorMessage);
       }
     } catch (err: any) {
-      console.error('Excepción capturada:', err);
+      console.error(err);
       setError(err.message || 'No se pudo actualizar la cita. Intente nuevamente.');
     } finally {
       setActionLoading(false);
@@ -439,9 +437,17 @@ const CitaComponent: React.FC = () => {
     label: odontologo.nombre,
   }));
 
+  // Paginación
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = citas.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(citas.length / recordsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Odontólogos</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Citas</h1>
 
       {/* Mensaje de error */}
       {error && (
@@ -460,7 +466,8 @@ const CitaComponent: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleCreate} className="bg-white p-6 border rounded-3xl shadow-lg mb-8">
+      {/* Formulario de Creación */}
+      <form onSubmit={handleCreateCita} className="bg-white p-6 border rounded-3xl shadow-lg mb-8">
         <h2 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Agregar Cita</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -525,10 +532,13 @@ const CitaComponent: React.FC = () => {
         <div className="flex justify-end mt-6">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center"
+            className={`bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center ${
+              actionLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             disabled={actionLoading}
           >
             {actionLoading ? 'Guardando...' : 'Agregar'}
+            {actionLoading && <FiLoader className="ml-2 animate-spin" />}
           </button>
         </div>
       </form>
@@ -536,6 +546,7 @@ const CitaComponent: React.FC = () => {
       {/* Lista de Citas */}
       {loading ? (
         <div className="text-center mt-10">
+          <FiLoader className="animate-spin text-4xl text-blue-600 mx-auto" />
           <p className="mt-4 text-gray-600">Cargando citas...</p>
         </div>
       ) : (
@@ -550,6 +561,7 @@ const CitaComponent: React.FC = () => {
                 onChange={(e) => {
                   const search = e.target.value.toLowerCase();
                   setSearchTerm(search);
+                  setCurrentPage(1);
                   fetchCitas(search);
                 }}
               />
@@ -589,14 +601,14 @@ const CitaComponent: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {citas.length === 0 ? (
+              {currentRecords.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-4 text-gray-700">
                     No hay citas para mostrar.
                   </td>
                 </tr>
               ) : (
-                citas.map((cita) => (
+                currentRecords.map((cita) => (
                   <tr className="text-center" key={cita.id}>
                     <td className="py-4 px-4 border-b">{cita.nombrePaciente}</td>
                     <td className="py-4 px-4 border-b">{cita.estado}</td>
@@ -617,18 +629,20 @@ const CitaComponent: React.FC = () => {
                       {/* Botón de Editar */}
                       <button
                         onClick={() => handleEdit(cita)}
-                        className="bg-yellow-500 text-white px-6 py-2 border rounded-3xl mr-2 hover:bg-yellow-600 transition-colors flex items-center"
+                        className="bg-yellow-500 text-white px-6 py-2 border rounded-3xl mr-2 hover:bg-yellow-600 transition duration-300 flex items-center"
                         aria-label={`Editar cita de ${cita.nombrePaciente}`}
                         title="Editar Cita"
+                        disabled={actionLoading}
                       >
                         <FiEdit className="w-5 h-5" />
                       </button>
                       {/* Botón de Eliminar */}
                       <button
                         onClick={() => handleDelete(cita.id)}
-                        className="bg-red-500 text-white px-6 py-2 border rounded-3xl hover:bg-red-600 transition-colors text-center"
+                        className="bg-red-500 text-white px-6 py-2 border rounded-3xl hover:bg-red-600 transition duration-300 flex items-center"
                         aria-label={`Eliminar cita de ${cita.nombrePaciente}`}
                         title="Eliminar Cita"
+                        disabled={actionLoading}
                       >
                         <FiTrash2 className="w-5 h-5" />
                       </button>
@@ -638,6 +652,45 @@ const CitaComponent: React.FC = () => {
               )}
             </tbody>
           </table>
+
+          {/* Paginación */}
+          {citas.length > recordsPerPage && (
+            <div className="flex justify-center mt-6">
+              <nav className="inline-flex -space-x-px">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${
+                    currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''
+                  }`}
+                >
+                  Anterior
+                </button>
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => paginate(index + 1)}
+                    className={`px-3 py-2 leading-tight border border-gray-300 ${
+                      currentPage === index + 1
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700'
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${
+                    currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''
+                  }`}
+                >
+                  Siguiente
+                </button>
+              </nav>
+            </div>
+          )}
         </div>
       )}
 
@@ -646,8 +699,8 @@ const CitaComponent: React.FC = () => {
         isOpen={isEditModalOpen}
         onRequestClose={() => setIsEditModalOpen(false)}
         contentLabel="Editar Cita"
-        className="modal"
-        overlayClassName="modal-overlay"
+        className="max-w-lg w-full mx-auto bg-white p-6 rounded-3xl shadow-lg outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
         {citaToEdit && (
           <div>
@@ -659,7 +712,7 @@ const CitaComponent: React.FC = () => {
                   type="datetime-local"
                   name="fecha"
                   value={formEdit.fecha}
-                  onChange={handleEditInputChange}
+                  onChange={handleEditInputChangeForm}
                   className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -669,7 +722,7 @@ const CitaComponent: React.FC = () => {
                 <select
                   name="estado"
                   value={formEdit.estado}
-                  onChange={handleEditInputChange}
+                  onChange={handleEditInputChangeForm}
                   className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
@@ -685,7 +738,7 @@ const CitaComponent: React.FC = () => {
                   name="motivo"
                   placeholder="Motivo de la cita"
                   value={formEdit.motivo}
-                  onChange={handleEditInputChange}
+                  onChange={handleEditInputChangeForm}
                   className="w-full border p-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 ></textarea>
@@ -713,27 +766,28 @@ const CitaComponent: React.FC = () => {
               <div className="flex justify-end gap-4 mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center"
+                  className={`bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center ${
+                    actionLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                   disabled={actionLoading}
                 >
                   {actionLoading ? 'Guardando...' : 'Guardar Cambios'}
+                  {actionLoading && <FiLoader className="ml-2 animate-spin" />}
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition flex items-center"
+                  className="bg-gray-500 text-white px-4 py-2 rounded-xl hover:bg-gray-600 transition duration-300 flex items-center"
                   onClick={() => setIsEditModalOpen(false)}
                   disabled={actionLoading}
                 >
                   Cancelar
+                  <AiOutlineClose className="ml-2" />
                 </button>
               </div>
             </form>
           </div>
         )}
       </Modal>
-
-      {/* Formulario para Agregar Cita */}
-
     </div>
   );
 };

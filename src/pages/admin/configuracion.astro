@@ -1,50 +1,15 @@
 ---
 import Sidebar from "../../components/Sidebar";
 import Layout from "../../layouts/Layout.astro";
+import ConfiguracionComponent from "../../components/pages/ConfiguracionComponent";
 ---
-
-<Layout title="Administrador - Configuración">
-    <div class="flex min-h-screen">
-      {/* Sidebar */}
-      <Sidebar/>
-  
-      {/* Main Content */}
-      <main class="flex-1 p-8 bg-gray-100 ml-64">
-        <h1 class="text-4xl font-bold mb-4">Configuración del Sistema</h1>
-        <p class="text-gray-700 mb-6">
-          Ajusta la configuración del sistema y las preferencias de la clínica según tus necesidades.
-        </p>
-        
-        {/* Opciones de Configuración */}
-        <div class="bg-gradient-to-r from-blue-700 to-blue-900 p-6 rounded-lg shadow-md mb-8">
-          <h2 class="text-3xl font-semibold mb-4 text-white">Preferencias Generales</h2>
-          <label class="block mb-5">
-            <span class="text-lg text-white">Nombre de la Clínica:</span>
-            <input type="text" value="Sonrisas" class="w-full p-4 border rounded-lg mt-2 text-black" />
-          </label>
-          <label class="block mb-5">
-            <span class="text-lg text-white">Dirección:</span>
-            <input type="text" value="Calle Principal #123" class="w-full p-4 border rounded-lg mt-2 text-black" />
-          </label>
-          <label class="block mb-5">
-            <span class="text-lg text-white">Correo Electrónico de Contacto:</span>
-            <input type="email" value="contacto@sonrisas.com" class="w-full p-4 border rounded-lg mt-2 text-black" />
-          </label>
-          <button class="px-6 py-3 mt-6 bg-white text-black rounded-lg hover:bg-blue-100 transition-colors">
-            Guardar Cambios
-          </button>
-        </div>
-
-         {/* Opciones Avanzadas */}
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-3xl font-semibold mb-4 text-gray-800">Opciones Avanzadas</h2>
-        <p class="text-gray-600 mb-6">
-          Puedes ajustar configuraciones avanzadas como usuarios del sistema, permisos y otros parámetros críticos.
-        </p>
-        <button class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-          Administrar Usuarios
-        </button>
-      </div>
+<Layout title="Administrador - Gestión de Pacientes">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <Sidebar/>
+    <!-- Main Content -->
+    <main class="flex-1 p-8 bg-gray-100 ml-64">
+      <ConfiguracionComponent client:load />
     </main>
   </div>
 </Layout>

@@ -14,14 +14,14 @@ const Sidebar = (props: Props) => {
     </div>
     <nav className="flex-1 p-6 overflow-y-auto">
       <ul className="space-y-4">
-      <li>
+      {/* <li>
           <a href="/admin/consultorio" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             Consultorio
           </a>
-        </li>
+        </li> */}
         <li>
           <a href="/admin/citas" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
