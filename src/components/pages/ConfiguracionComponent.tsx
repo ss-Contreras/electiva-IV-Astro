@@ -33,7 +33,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await fetch('https://localhost:7027/api/paciente');
+      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/paciente');
       const data: Paciente[] = await response.json();
       setTotalPacientes(data.length);
     } catch (error) {
@@ -43,7 +43,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchOdontologos = async () => {
     try {
-      const response = await fetch('https://localhost:7027/api/odontologo');
+      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/odontologo');
       const data: Odontologo[] = await response.json();
       setTotalOdontologos(data.length);
     } catch (error) {
@@ -53,7 +53,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchCitas = async () => {
     try {
-      const response = await fetch('https://localhost:7027/api/citas');
+      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/citas');
       const data: Cita[] = await response.json();
       setTotalCitas(data.length);
       const pendientes = data.filter((cita) => cita.estado === 'Pendiente').length;

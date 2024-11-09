@@ -42,7 +42,7 @@ const DashboardComponent: React.FC = () => {
   // obtener los datos de los pacientes
   const fetchPacienteData = async () => {
     try {
-      const response = await axios.get('https://localhost:7027/api/paciente');
+      const response = await axios.get('http://sonrisasbackendelectivaiv.somee.com/api/paciente');
       if (response.status === 200) {
         const pacientesData = response.data;
         setPacientes(pacientesData);
@@ -58,7 +58,7 @@ const DashboardComponent: React.FC = () => {
   // obtener los datos de las citas
   const fetchCitaData = async (pacientesData: Paciente[]) => {
     try {
-      const response = await axios.get('https://localhost:7027/api/citas');
+      const response = await axios.get('http://sonrisasbackendelectivaiv.somee.com/api/citas');
       if (response.status === 200) {
         const citasData = response.data;
         setTotalCitas(citasData.length);

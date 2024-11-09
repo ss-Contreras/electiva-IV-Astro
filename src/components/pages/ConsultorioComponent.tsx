@@ -59,7 +59,7 @@ const ConsultorioComponent: React.FC = () => {
   // Función para obtener los consultorios
   const fetchConsultorios = async () => {
     try {
-      const response = await fetch('https://localhost:7027/api/consultorio');
+      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/consultorio');
       if (!response.ok) {
         throw new Error('Error al obtener los consultorios');
       }
@@ -94,7 +94,7 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://localhost:7027/api/consultorio', {
+      const response = await fetch('http://sonrisasbackendelectivaiv.somee.com/api/consultorio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://localhost:7027/api/consultorio/${editFormData.id}`, {
+      const response = await fetch(`http://sonrisasbackendelectivaiv.somee.com/api/consultorio/${editFormData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://localhost:7027/api/consultorio/${id}`, {
+      const response = await fetch(`http://sonrisasbackendelectivaiv.somee.com/api/consultorio/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {

@@ -92,7 +92,7 @@ const OdontologosComponent: React.FC = () => {
   // Función para fetch consultorios
   const fetchConsultorios = async () => {
     try {
-      const response = await axios.get('https://localhost:7027/api/consultorio');
+      const response = await axios.get('http://sonrisasbackendelectivaiv.somee.com/api/consultorio');
       if (response.status === 200) {
         setConsultorios(response.data);
       }
@@ -131,7 +131,7 @@ const OdontologosComponent: React.FC = () => {
     try {
       const payload = { ...formCreate };
 
-      const response = await axios.post('https://localhost:7027/api/odontologo', payload);
+      const response = await axios.post('http://sonrisasbackendelectivaiv.somee.com/api/odontologo', payload);
 
       if (response.status === 201) {
         await fetchOdontologos(searchTerm);
@@ -178,7 +178,7 @@ const OdontologosComponent: React.FC = () => {
       const payload = { ...formEdit };
 
       const response = await axios.put(
-        `https://localhost:7027/api/odontologo/${odontologoToEdit.id}`,
+        `http://sonrisasbackendelectivaiv.somee.com/api/odontologo/${odontologoToEdit.id}`,
         payload
       );
 
@@ -211,7 +211,7 @@ const OdontologosComponent: React.FC = () => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar este odontólogo?')) return;
     setActionLoading(true);
     try {
-      await axios.delete(`https://localhost:7027/api/odontologo/${id}`);
+      await axios.delete(`http://sonrisasbackendelectivaiv.somee.com/api/odontologo/${id}`);
       await fetchOdontologos(searchTerm);
       setError(null);
     } catch (err: any) {

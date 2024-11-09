@@ -29,7 +29,7 @@ const ListaCitasComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await axios.get('https://localhost:7027/api/paciente');
+      const response = await axios.get('http://sonrisasbackendelectivaiv.somee.com/api/paciente');
       if (response.status === 200) {
         setPacientes(response.data);
         setLoading(false);
