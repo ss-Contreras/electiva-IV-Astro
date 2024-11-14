@@ -413,7 +413,8 @@ const ConsultorioComponent: React.FC = () => {
                   className={`bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center ${
                     actionLoading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
-                  disabled={actionLoading}
+                  // disabled={actionLoading}
+                  disabled
                 >
                   {actionLoading ? 'Actualizando...' : 'Actualizar'}
                   {actionLoading && <FiLoader className="ml-2 animate-spin" />}

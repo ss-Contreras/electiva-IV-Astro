@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7027/api/radiografia'; //
+const API_BASE_URL = 'https://sonrisasbackendelectivaiv.somee.com/api/radiografia'; //
 
 // Crear una nueva radiografía
 export const crearRadiografia = async (formData: FormData) => {

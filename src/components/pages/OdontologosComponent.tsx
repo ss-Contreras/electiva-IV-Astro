@@ -52,6 +52,10 @@ const OdontologosComponent: React.FC = () => {
     consultorioId: 0,
   });
 
+  // Estados de Paginación
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 5;
+
   // Configurar react-modal
   useEffect(() => {
     Modal.setAppElement('#root');
@@ -59,10 +63,14 @@ const OdontologosComponent: React.FC = () => {
     fetchConsultorios();
   }, []);
 
-  // Función para formatear y fetch odontologos
+  // Función para fetch odontologos
   const fetchOdontologos = async (search: string = '') => {
     try {
-      const response = await axios.get('https://localhost:7027/api/odontologo');
+      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/odontologo', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.status === 200) {
         let data: Odontologo[] = response.data;
 
@@ -81,10 +89,23 @@ const OdontologosComponent: React.FC = () => {
 
         setOdontologos(data);
         setLoading(false);
+        setCurrentPage(1); // Reiniciar a la primera página al actualizar los datos
+      } else {
+        setError('Error al obtener la lista de odontólogos.');
+        setLoading(false);
       }
     } catch (err: any) {
       console.error('Error al obtener los odontólogos:', err);
-      setError('No se pudo obtener la lista de odontólogos.');
+      if (err.response) {
+        // El servidor respondió con un código de estado fuera del rango 2xx
+        setError(`Error ${err.response.status}: ${err.response.data.message || 'No se pudo obtener la lista de odontólogos.'}`);
+      } else if (err.request) {
+        // La solicitud fue hecha pero no se recibió respuesta
+        setError('No se recibió respuesta del servidor.');
+      } else {
+        // Algo pasó al configurar la solicitud
+        setError('Error al configurar la solicitud.');
+      }
       setLoading(false);
     }
   };
@@ -92,13 +113,25 @@ const OdontologosComponent: React.FC = () => {
   // Función para fetch consultorios
   const fetchConsultorios = async () => {
     try {
-      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/consultorio');
+      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/consultorio', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.status === 200) {
         setConsultorios(response.data);
+      } else {
+        setError('Error al obtener la lista de consultorios.');
       }
     } catch (err: any) {
       console.error('Error al obtener los consultorios:', err);
-      setError('No se pudo obtener la lista de consultorios.');
+      if (err.response) {
+        setError(`Error ${err.response.status}: ${err.response.data.message || 'No se pudo obtener la lista de consultorios.'}`);
+      } else if (err.request) {
+        setError('No se recibió respuesta del servidor.');
+      } else {
+        setError('Error al configurar la solicitud.');
+      }
     }
   };
 
@@ -128,10 +161,15 @@ const OdontologosComponent: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setActionLoading(true);
+    setError(null); // Resetear errores antes de la acción
     try {
       const payload = { ...formCreate };
 
-      const response = await axios.post('https://sonrisasbackendelectivaiv.somee.com/api/odontologo', payload);
+      const response = await axios.post('https://sonrisasbackendelectivaiv.somee.com/api/odontologo', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.status === 201) {
         await fetchOdontologos(searchTerm);
@@ -149,7 +187,13 @@ const OdontologosComponent: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Error al enviar el formulario:', err);
-      setError('No se pudo enviar la información.');
+      if (err.response) {
+        setError(`Error ${err.response.status}: ${err.response.data.message || 'No se pudo agregar el odontólogo.'}`);
+      } else if (err.request) {
+        setError('No se recibió respuesta del servidor.');
+      } else {
+        setError('Error al configurar la solicitud.');
+      }
     } finally {
       setActionLoading(false);
     }
@@ -174,12 +218,18 @@ const OdontologosComponent: React.FC = () => {
     e.preventDefault();
     if (!odontologoToEdit) return;
     setActionLoading(true);
+    setError(null); // Resetear errores antes de la acción
     try {
       const payload = { ...formEdit };
 
       const response = await axios.put(
         `https://sonrisasbackendelectivaiv.somee.com/api/odontologo/${odontologoToEdit.id}`,
-        payload
+        payload,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
 
       if (response.status === 200) {
@@ -200,7 +250,13 @@ const OdontologosComponent: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Error al actualizar el odontólogo:', err);
-      setError('No se pudo actualizar el odontólogo.');
+      if (err.response) {
+        setError(`Error ${err.response.status}: ${err.response.data.message || 'No se pudo actualizar el odontólogo.'}`);
+      } else if (err.request) {
+        setError('No se recibió respuesta del servidor.');
+      } else {
+        setError('Error al configurar la solicitud.');
+      }
     } finally {
       setActionLoading(false);
     }
@@ -210,13 +266,24 @@ const OdontologosComponent: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar este odontólogo?')) return;
     setActionLoading(true);
+    setError(null); // Resetear errores antes de la acción
     try {
-      await axios.delete(`https://sonrisasbackendelectivaiv.somee.com/api/odontologo/${id}`);
+      await axios.delete(`https://sonrisasbackendelectivaiv.somee.com/api/odontologo/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       await fetchOdontologos(searchTerm);
       setError(null);
     } catch (err: any) {
       console.error('Error al eliminar el odontólogo:', err);
-      setError('No se pudo eliminar el odontólogo.');
+      if (err.response) {
+        setError(`Error ${err.response.status}: ${err.response.data.message || 'No se pudo eliminar el odontólogo.'}`);
+      } else if (err.request) {
+        setError('No se recibió respuesta del servidor.');
+      } else {
+        setError('Error al configurar la solicitud.');
+      }
     } finally {
       setActionLoading(false);
     }
@@ -228,11 +295,30 @@ const OdontologosComponent: React.FC = () => {
     label: consultorio.nombre,
   }));
 
-  // Opciones para react-select en la búsqueda (si decides implementarla como select)
-  // const searchOptions = odontologos.map((odontologo) => ({
-  //   value: odontologo.id,
-  //   label: `${odontologo.nombre} ${odontologo.apellido}`,
-  // }));
+  // Calcular los índices para la paginación
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = odontologos.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(odontologos.length / itemsPerPage);
+
+  // Funciones para manejar la navegación de páginas
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generar los números de página para mostrar
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -323,7 +409,7 @@ const OdontologosComponent: React.FC = () => {
               />
             </div>
             <div>
-            <p className="block mb-2 text-gray-600">Selecciona el consultorio asignado.</p>
+              <p className="block mb-2 text-gray-600">Selecciona el consultorio asignado.</p>
               <Select
                 options={consultorioOptions}
                 value={
@@ -348,7 +434,7 @@ const OdontologosComponent: React.FC = () => {
                 }}
                 isClearable
                 placeholder="Selecciona un consultorio"
-                className="react-select-container w-full border rounded-2xl focus:outline-none focus:ring-2s"
+                className="react-select-container w-full border rounded-2xl focus:outline-none focus:ring-2"
               />
             </div>
           </div>
@@ -380,7 +466,7 @@ const OdontologosComponent: React.FC = () => {
                 className="w-full md:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={searchTerm}
                 onChange={(e) => {
-                  const search = e.target.value.toLowerCase();
+                  const search = e.target.value;
                   setSearchTerm(search);
                   fetchOdontologos(search);
                 }}
@@ -419,20 +505,20 @@ const OdontologosComponent: React.FC = () => {
                 <th className="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">
                   Consultorio
                 </th>
-                <th className="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">
+                {/* <th className="px-6 py-3 border-b border-gray-200 text-gray-800 text-center text-sm uppercase font-semibold">
                   Acciones
-                </th>
+                </th> */}
               </tr>
             </thead>
             <tbody>
-              {odontologos.length === 0 ? (
+              {currentItems.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-4 text-gray-700">
                     No hay odontólogos registrados.
                   </td>
                 </tr>
               ) : (
-                odontologos.map((odontologo) => {
+                currentItems.map((odontologo) => {
                   const consultorio = consultorios.find(
                     (consult) => consult.id === odontologo.consultorioId
                   );
@@ -460,8 +546,8 @@ const OdontologosComponent: React.FC = () => {
                       <td className="text-center px-6 py-4 border-b border-gray-200 text-gray-900 whitespace-nowrap">
                         {consultorio ? consultorio.nombre : 'N/A'}
                       </td>
-                      <td className="text-center px-6 py-4 border-b border-gray-200 whitespace-nowrap flex justify-center space-x-2">
-                        {/* Botón de Editar */}
+                      {/* <td className="text-center px-6 py-4 border-b border-gray-200 whitespace-nowrap flex justify-center space-x-2">
+                        
                         <button
                           onClick={() => handleEdit(odontologo)}
                           className="flex items-center justify-center bg-yellow-500 text-white rounded-full p-2 hover:bg-yellow-600 transition-colors"
@@ -470,7 +556,7 @@ const OdontologosComponent: React.FC = () => {
                         >
                           <FiEdit className="w-5 h-5" />
                         </button>
-                        {/* Botón de Eliminar */}
+                       
                         <button
                           onClick={() => handleDelete(odontologo.id)}
                           className="flex items-center justify-center bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
@@ -479,13 +565,57 @@ const OdontologosComponent: React.FC = () => {
                         >
                           <FiTrash2 className="w-5 h-5" />
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 })
               )}
             </tbody>
           </table>
+
+          {/* Controles de Paginación */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-4 space-x-2">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg ${
+                  currentPage === 1
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                aria-label="Página Anterior"
+              >
+                Anterior
+              </button>
+              {pageNumbers.map((number) => (
+                <button
+                  key={number}
+                  onClick={() => handlePageClick(number)}
+                  className={`px-4 py-2 rounded-lg ${
+                    currentPage === number
+                      ? 'bg-blue-700 text-white'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                  aria-label={`Ir a la página ${number}`}
+                >
+                  {number}
+                </button>
+              ))}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg ${
+                  currentPage === totalPages
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                aria-label="Página Siguiente"
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -584,7 +714,7 @@ const OdontologosComponent: React.FC = () => {
                     }}
                     isClearable
                     placeholder="Selecciona un consultorio"
-                    className="react-select-container"
+                    className="react-select-container w-full border rounded-lg focus:outline-none focus:ring-2"
                   />
                   <p className="text-gray-500 text-sm mt-1">
                     Selecciona el consultorio asignado.
