@@ -1,5 +1,5 @@
 ---
-import Footer from "../components/Footer.astro";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import ListaCitasComponent from "../components/pages/ListaCitasComponent";
@@ -11,15 +11,16 @@ import ListaCitasComponent from "../components/pages/ListaCitasComponent";
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mt-16 sm:mt-12">
         <div class="bg-gray-900/5 rounded-xl p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-          <!-- Aquí insertamos el componente de la lista de citas -->
+          <div class="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
           <ListaCitasComponent client:load />
         </div>
       </div>
     </div>
-
+  </div>
     <div>
       <h1 class="mt-10"></h1>
     </div>
   </main>
   <Footer />
 </Layout>
+

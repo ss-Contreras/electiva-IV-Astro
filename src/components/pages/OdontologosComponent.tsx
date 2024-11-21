@@ -66,7 +66,7 @@ const OdontologosComponent: React.FC = () => {
   // Función para fetch odontologos
   const fetchOdontologos = async (search: string = '') => {
     try {
-      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/odontologo', {
+      const response = await axios.get('https://electivabackend.somee.com/api/odontologo', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -113,7 +113,7 @@ const OdontologosComponent: React.FC = () => {
   // Función para fetch consultorios
   const fetchConsultorios = async () => {
     try {
-      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/consultorio', {
+      const response = await axios.get('https://electivabackend.somee.com/api/consultorio', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -165,7 +165,7 @@ const OdontologosComponent: React.FC = () => {
     try {
       const payload = { ...formCreate };
 
-      const response = await axios.post('https://sonrisasbackendelectivaiv.somee.com/api/odontologo', payload, {
+      const response = await axios.post('https://electivabackend.somee.com/api/odontologo', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -223,7 +223,7 @@ const OdontologosComponent: React.FC = () => {
       const payload = { ...formEdit };
 
       const response = await axios.put(
-        `https://sonrisasbackendelectivaiv.somee.com/api/odontologo/${odontologoToEdit.id}`,
+        `https://electivabackend.somee.com/api/odontologo/${odontologoToEdit.id}`,
         payload,
         {
           headers: {
@@ -268,7 +268,7 @@ const OdontologosComponent: React.FC = () => {
     setActionLoading(true);
     setError(null); // Resetear errores antes de la acción
     try {
-      await axios.delete(`https://sonrisasbackendelectivaiv.somee.com/api/odontologo/${id}`, {
+      await axios.delete(`https://electivabackend.somee.com/api/odontologo/${id}`, {
         headers: {
           'Content-Type': 'application/json',
         },

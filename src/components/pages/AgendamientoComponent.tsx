@@ -28,7 +28,7 @@ const AgendamientoComponent: React.FC = () => {
   useEffect(() => {
     const fetchOdontologos = async () => {
       try {
-        const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/odontologo');
+        const response = await axios.get('https://electivabackend.somee.com/api/odontologo');
         if (response.status === 200) {
           setOdontologos(response.data);
         }
@@ -98,7 +98,7 @@ const AgendamientoComponent: React.FC = () => {
         data.append('imagen', imagen);
       }
 
-      const response = await axios.post('https://sonrisasbackendelectivaiv.somee.com/api/paciente', data, {
+      const response = await axios.post('https://electivabackend.somee.com/api/paciente', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

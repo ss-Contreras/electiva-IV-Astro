@@ -1,107 +1,101 @@
-import React from 'react'
+import React from 'react';
+import { useState } from 'react';
+import { FiCalendar, FiUser, FiSettings, FiImage, FiHome, FiSmile, FiTool } from 'react-icons/fi';
+import { FaTooth } from 'react-icons/fa';
 
-type Props = {}
+const Sidebar = () => {
+  const [tooltip, setTooltip] = useState('');
 
-const Sidebar = (props: Props) => {
   return (
-
-    <aside className="w-64 bg-blue-900 text-white flex flex-col fixed h-full shadow-lg md:block z-10">
+    <aside className="w-56 bg-gradient-to-b from-blue-900 to-blue-700 text-white flex flex-col fixed h-full shadow-2xl md:block z-20 transform transition-transform duration-500 ease-in-out hover:translate-x-3">
       {/* Logo */}
-      <div className="p-6 text-3xl font-bold border-b border-blue-700">
-        <a href="/">
-          Sonrisas
+      <div className="p-6 text-3xl font-extrabold border-b border-blue-600 hover:text-blue-300 transition-colors duration-300">
+        <a href="/" className="flex items-center space-x-3">
+          <FaTooth className="h-8 w-8" />
+          <span>Sonrisas</span>
         </a>
       </div>
       <nav className="flex-1 p-6 overflow-y-auto">
         <ul className="space-y-4">
-          {/* <li>
-          <a href="/admin/consultorio" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Consultorio
-          </a>
-        </li> */}
-          <li>
-            <a href="/admin/citas" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Citas
+          <li
+            onMouseEnter={() => setTooltip('Ver y gestionar citas')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/citas" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiCalendar className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Citas</span>
             </a>
           </li>
-          {/* <li>
-          <a href="/admin/pacientes" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            Pacientes
-          </a>
-        </li> */}
-          <li>
-            <a href="/admin/odontologos" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-5 4v-4m0 0l-3 3m3-3l3 3" />
-              </svg>
-              Odontologos
+          <li
+            onMouseEnter={() => setTooltip('Ver y administrar odontólogos')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/odontologos" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiUser className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Odontólogos</span>
             </a>
           </li>
-          <li>
-            <a href="/admin/radiografias" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z" />
-              </svg>
-              Radiografías
+          <li
+            onMouseEnter={() => setTooltip('Ver radiografías de pacientes')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/radiografias" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiImage className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Radiografías</span>
             </a>
           </li>
-          <li>
-            <a href="/admin/configuracion" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.964a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.392 2.467a1 1 0 00-.364 1.118l1.287 3.965c.3.921-.755 1.688-1.54 1.118l-3.392-2.467a1 1 0 00-1.176 0l-3.392 2.467c-.784.57-1.838-.197-1.54-1.118l1.287-3.965a1 1 0 00-.364-1.118L2.86 9.39c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.964z" />
-              </svg>
-              Configuración
+          <li
+            onMouseEnter={() => setTooltip('Ver consultorios disponibles')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/consultorio" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiHome className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Consultorios</span>
             </a>
           </li>
-          <hr />
-          <li>
-            <a className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-              Vistas por mejorar
+          <li
+            onMouseEnter={() => setTooltip('Ver pacientes registrados')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/pacientes" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiUser className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Pacientes</span>
             </a>
           </li>
-          <li>
-            <a href="/admin/consultorio" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.964a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.392 2.467a1 1 0 00-.364 1.118l1.287 3.965c.3.921-.755 1.688-1.54 1.118l-3.392-2.467a1 1 0 00-1.176 0l-3.392 2.467c-.784.57-1.838-.197-1.54-1.118l1.287-3.965a1 1 0 00-.364-1.118L2.86 9.39c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.964z" />
-              </svg>
-              Consultorios
-            </a>
-          </li>
-          <li>
-            <a href="/admin/pacientes" className="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.964a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.392 2.467a1 1 0 00-.364 1.118l1.287 3.965c.3.921-.755 1.688-1.54 1.118l-3.392-2.467a1 1 0 00-1.176 0l-3.392 2.467c-.784.57-1.838-.197-1.54-1.118l1.287-3.965a1 1 0 00-.364-1.118L2.86 9.39c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.964z" />
-              </svg>
-              Pacientes
+          <li
+            onMouseEnter={() => setTooltip('Configuración e información')}
+            onMouseLeave={() => setTooltip('')}
+            className="group relative"
+          >
+            <a href="/admin/configuracion" className="flex items-center p-3 rounded-xl hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:scale-110">
+              <FiSettings className="h-6 w-6 mr-3 text-white group-hover:text-yellow-400 transition-colors duration-300" />
+              <span>Información</span>
             </a>
           </li>
         </ul>
       </nav>
 
+      {/* Tooltip */}
+      {tooltip && (
+        <div className="absolute bottom-20 left-60 p-3 bg-black text-white rounded-lg shadow-lg text-sm opacity-90 transition-opacity duration-500">
+          {tooltip}
+        </div>
+      )}
+
       {/* Botón "Volver" */}
-      <div className="p-6 border-t border-blue-700">
-        <a href="/admin" className="w-full flex items-center justify-center p-3 rounded-lg bg-blue-800 hover:bg-blue-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-          </svg>
-          Admin
+      <div className="p-6 border-t border-blue-600">
+        <a href="/admin" className="w-full flex items-center justify-center p-3 rounded-xl bg-blue-800 hover:bg-blue-600 transition-transform transform hover:scale-110 duration-500">
+          <FiTool className="h-6 w-6 mr-2" />
+          <span>Admin</span>
         </a>
       </div>
     </aside>
+  );
+};
 
-  )
-}
-
-export default Sidebar
+export default Sidebar;

@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { FiUsers, FiCalendar, FiUserCheck } from 'react-icons/fi';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Paciente {
   id: number;
@@ -33,7 +36,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/paciente');
+      const response = await fetch('https://electivabackend.somee.com/api/paciente');
       const data: Paciente[] = await response.json();
       setTotalPacientes(data.length);
     } catch (error) {
@@ -43,7 +46,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchOdontologos = async () => {
     try {
-      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/odontologo');
+      const response = await fetch('https://electivabackend.somee.com/api/odontologo');
       const data: Odontologo[] = await response.json();
       setTotalOdontologos(data.length);
     } catch (error) {
@@ -53,7 +56,7 @@ const ConfiguracionComponent: React.FC = () => {
 
   const fetchCitas = async () => {
     try {
-      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/citas');
+      const response = await fetch('https://electivabackend.somee.com/api/citas');
       const data: Cita[] = await response.json();
       setTotalCitas(data.length);
       const pendientes = data.filter((cita) => cita.estado === 'Pendiente').length;
@@ -63,9 +66,20 @@ const ConfiguracionComponent: React.FC = () => {
     }
   };
 
+  const data = {
+    labels: ['Pacientes', 'Odontólogos', 'Citas Pendientes'],
+    datasets: [
+      {
+        data: [totalPacientes, totalOdontologos, citasPendientes],
+        backgroundColor: ['#60A5FA', '#34D399', '#FBBF24'],
+        hoverBackgroundColor: ['#3B82F6', '#10B981', '#F59E0B'],
+      },
+    ],
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Panel de Configuración</h1>
+    <div className="container mx-auto px-6 py-8">
+      <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-900">Panel de Configuración</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="bg-white p-6 rounded-3xl shadow-lg flex items-center">
@@ -89,6 +103,16 @@ const ConfiguracionComponent: React.FC = () => {
           <div>
             <h2 className="text-2xl font-semibold text-gray-700">Citas Pendientes</h2>
             <p className="text-3xl text-gray-800">{citasPendientes}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Gráfico de resumen */}
+      <div className="mt-12 bg-white p-8 rounded-3xl shadow-lg">
+        <h2 className="text-3xl font-semibold mb-6 text-center text-gray-700">Resumen de Datos</h2>
+        <div className="flex justify-center">
+          <div className="w-64">
+            <Doughnut data={data} />
           </div>
         </div>
       </div>

@@ -24,10 +24,14 @@
     "@types/react-dom": "^18.3.1",
     "astro": "^4.14.5",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
     "lucide-react": "^0.453.0",
+    "nprogress": "^0.2.0",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.10",
     "react-hot-toast": "^2.4.1",
@@ -39,7 +43,9 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.41",
     "@types/node": "^22.9.0",
+    "@types/nprogress": "^0.2.3",
     "@types/react-modal": "^3.16.3"
   }
 }

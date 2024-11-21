@@ -5,6 +5,9 @@ import SideBar from '../Sidebar';
 import { FiEdit, FiTrash2, FiLoader } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
 import Modal from 'react-modal';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+import { motion } from 'framer-motion';
 
 // Configuración de React Modal
 Modal.setAppElement('#root');
@@ -25,6 +28,7 @@ interface ConsultorioDto {
   direccion: string;
   telefono: string;
   odontologos: OdontologoDto[];
+  esNuevo?: boolean; // Nueva propiedad opcional
 }
 
 const ConsultorioComponent: React.FC = () => {
@@ -58,8 +62,9 @@ const ConsultorioComponent: React.FC = () => {
 
   // Función para obtener los consultorios
   const fetchConsultorios = async () => {
+    NProgress.start(); // Iniciar la barra de carga
     try {
-      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/consultorio');
+      const response = await fetch('https://electivabackend.somee.com/api/consultorio');
       if (!response.ok) {
         throw new Error('Error al obtener los consultorios');
       }
@@ -69,6 +74,8 @@ const ConsultorioComponent: React.FC = () => {
     } catch (err) {
       setError('No se pudo cargar los consultorios. Intente nuevamente.');
       setLoading(false);
+    } finally {
+      NProgress.done(); // Finalizar la barra de carga
     }
   };
 
@@ -94,7 +101,7 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://sonrisasbackendelectivaiv.somee.com/api/consultorio', {
+      const response = await fetch('https://electivabackend.somee.com/api/consultorio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +145,7 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://sonrisasbackendelectivaiv.somee.com/api/consultorio/${editFormData.id}`, {
+      const response = await fetch(`https://electivabackend.somee.com/api/consultorio/${editFormData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +180,8 @@ const ConsultorioComponent: React.FC = () => {
     setActionLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://sonrisasbackendelectivaiv.somee.com/api/consultorio/${id}`, {
+      // Corrección: Añadir '/api' al endpoint
+      const response = await fetch(`https://electivabackend.somee.com/api/consultorio/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -215,14 +223,14 @@ const ConsultorioComponent: React.FC = () => {
           )}
 
           {/* Formulario de Creación */}
-          <form onSubmit={handleCreate} className="mb-12 bg-white p-8 rounded-3xl shadow-lg">
+          <form onSubmit={handleCreate} className="mb-12 bg-white p-8 rounded-3xl shadow-lg animate-fadeIn">
             <h2 className="text-2xl font-semibold mb-6 text-gray-700 flex items-center">
               Crear Consultorio
               {actionLoading && <FiLoader className="ml-2 animate-spin text-xl" />}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label htmlFor="nombre" className="block mb-2 text-gray-600">
+              <div className="flex flex-col">
+                <label htmlFor="nombre" className="mb-2 text-gray-600">
                   Nombre
                 </label>
                 <input
@@ -236,8 +244,8 @@ const ConsultorioComponent: React.FC = () => {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="direccion" className="block mb-2 text-gray-600">
+              <div className="flex flex-col">
+                <label htmlFor="direccion" className="mb-2 text-gray-600">
                   Dirección
                 </label>
                 <input
@@ -251,8 +259,8 @@ const ConsultorioComponent: React.FC = () => {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="telefono" className="block mb-2 text-gray-600">
+              <div className="flex flex-col">
+                <label htmlFor="telefono" className="mb-2 text-gray-600">
                   Teléfono
                 </label>
                 <input
@@ -281,60 +289,72 @@ const ConsultorioComponent: React.FC = () => {
 
           {/* Lista de Consultorios */}
           {loading ? (
-            <div className="text-center mt-10">
-              <FiLoader className="animate-spin text-4xl text-blue-600 mx-auto" />
+            <div className="flex flex-col items-center mt-10">
+              <FiLoader className="animate-spin text-4xl text-blue-600" />
               <p className="mt-4 text-gray-600">Cargando consultorios...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {consultorios.map((consultorio) => (
-                <div
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {consultorios.map((consultorio, index) => (
+                <motion.div
                   key={consultorio.id}
-                  className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white p-6 md:p-8 h-full flex flex-col justify-between rounded-3xl shadow-lg hover:shadow-2xl transition transform hover:scale-105 duration-300 relative"
                 >
-                  <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                    {consultorio.nombre}
-                  </h2>
-                  <p className="text-gray-600 mb-2">
-                    <strong>Dirección:</strong> {consultorio.direccion}
-                  </p>
-                  <p className="text-gray-600 mb-4">
-                    <strong>Teléfono:</strong> {consultorio.telefono}
-                  </p>
-                  {/* Odontólogos */}
-                  {consultorio.odontologos && consultorio.odontologos.length > 0 && (
-                    <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                        Odontólogos:
-                      </h3>
-                      <ul className="list-disc list-inside text-gray-600 space-y-1">
-                        {consultorio.odontologos.map((odontologo) => (
-                          <li key={odontologo.id}>
-                            {odontologo.nombre} {odontologo.apellido || ''}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                  {/* Badge de Nuevo */}
+                  {consultorio.esNuevo && (
+                    <span className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-bl-md">
+                      Nuevo
+                    </span>
                   )}
-                  <div className="flex items-center">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                      {consultorio.nombre}
+                    </h2>
+                    <p className="text-gray-600 mb-2">
+                      <strong>Dirección:</strong> {consultorio.direccion}
+                    </p>
+                    <p className="text-gray-600 mb-4">
+                      <strong>Teléfono:</strong> {consultorio.telefono}
+                    </p>
+                    {/* Odontólogos */}
+                    {consultorio.odontologos && consultorio.odontologos.length > 0 && (
+                      <div className="mb-4">
+                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                          Odontólogos:
+                        </h3>
+                        <ul className="list-disc list-inside text-gray-600 space-y-1">
+                          {consultorio.odontologos.map((odontologo) => (
+                            <li key={odontologo.id}>
+                              {odontologo.nombre} {odontologo.apellido || ''}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  {/* Botones de Acción */}
+                  <div className="flex justify-end space-x-2 mt-4">
                     <button
                       onClick={() => handleEdit(consultorio)}
-                      className="bg-yellow-500 text-white px-4 py-2 rounded-xl mr-2 hover:bg-yellow-600 transition duration-300 flex items-center"
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-xl hover:bg-yellow-600 shadow-md hover:shadow-xl transition duration-300 flex items-center"
                       disabled={actionLoading}
                     >
-                      <FiEdit className="mr-2" />
+                      <FiEdit className="mr-2 transition-transform duration-300 hover:rotate-90" />
                       Editar
                     </button>
                     <button
                       onClick={() => handleDelete(consultorio.id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition duration-300 flex items-center"
+                      className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 shadow-md hover:shadow-xl transition duration-300 flex items-center"
                       disabled={actionLoading}
                     >
-                      <FiTrash2 className="mr-2" />
+                      <FiTrash2 className="mr-2 transition-transform duration-300 hover:rotate-90" />
                       Eliminar
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -352,8 +372,8 @@ const ConsultorioComponent: React.FC = () => {
               {actionLoading && <FiLoader className="ml-2 animate-spin text-xl" />}
             </h2>
             <form onSubmit={handleUpdate} className="space-y-6">
-              <div>
-                <label htmlFor="edit-nombre" className="block text-gray-600 mb-2">
+              <div className="flex flex-col">
+                <label htmlFor="edit-nombre" className="mb-2 text-gray-600">
                   Nombre
                 </label>
                 <input
@@ -367,8 +387,8 @@ const ConsultorioComponent: React.FC = () => {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="edit-direccion" className="block text-gray-600 mb-2">
+              <div className="flex flex-col">
+                <label htmlFor="edit-direccion" className="mb-2 text-gray-600">
                   Dirección
                 </label>
                 <input
@@ -382,8 +402,8 @@ const ConsultorioComponent: React.FC = () => {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="edit-telefono" className="block text-gray-600 mb-2">
+              <div className="flex flex-col">
+                <label htmlFor="edit-telefono" className="mb-2 text-gray-600">
                   Teléfono
                 </label>
                 <input
@@ -413,8 +433,7 @@ const ConsultorioComponent: React.FC = () => {
                   className={`bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center ${
                     actionLoading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
-                  // disabled={actionLoading}
-                  disabled
+                  disabled={actionLoading}
                 >
                   {actionLoading ? 'Actualizando...' : 'Actualizar'}
                   {actionLoading && <FiLoader className="ml-2 animate-spin" />}

@@ -151,7 +151,7 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
 
     setLoading(true);
     try {
-      const response = await axios.post<RadiografiaDTO>('https://sonrisasbackendelectivaiv.somee.com/api/radiografias', formData, {
+      const response = await axios.post<RadiografiaDTO>('https://electivabackend.somee.com/api/radiografias', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -380,7 +380,7 @@ const RadiografiasComponent: React.FC = () => {
   const fetchPacientes = async () => {
     setLoadingPacientes(true);
     try {
-      const response = await axios.get<Paciente[]>('https://sonrisasbackendelectivaiv.somee.com/api/paciente');
+      const response = await axios.get<Paciente[]>('https://electivabackend.somee.com/api/paciente');
       setPacientes(response.data);
       setError(null); // Limpiar el error si la carga es exitosa
     } catch (err: any) {
@@ -394,7 +394,7 @@ const RadiografiasComponent: React.FC = () => {
   // Función para obtener radiografías recientes
   const fetchRadiografiasRecientes = async (cantidad: number = 10) => {
     try {
-      const response = await axios.get<RadiografiaDTO[]>('https://sonrisasbackendelectivaiv.somee.com/api/radiografias/recientes', {
+      const response = await axios.get<RadiografiaDTO[]>('https://electivabackend.somee.com/api/radiografias/recientes', {
         params: { cantidad },
       });
       setRadiografias(response.data);
@@ -410,7 +410,7 @@ const RadiografiasComponent: React.FC = () => {
   // Función para buscar radiografías
   const buscarRadiografias = async (termino: string) => {
     try {
-      const response = await axios.get<RadiografiaDTO[]>('https://sonrisasbackendelectivaiv.somee.com/api/radiografias/buscar', {
+      const response = await axios.get<RadiografiaDTO[]>('https://electivabackend.somee.com/api/radiografias/buscar', {
         params: { termino },
       });
       setRadiografias(response.data);
@@ -448,7 +448,7 @@ const RadiografiasComponent: React.FC = () => {
   const handleEliminar = async (id: number) => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta radiografía?')) return;
     try {
-      await axios.delete(`https://sonrisasbackendelectivaiv.somee.com/api/radiografias/${id}`);
+      await axios.delete(`https://electivabackend.somee.com/api/radiografias/${id}`);
       setRadiografias(radiografias.filter((r) => r.id !== id));
       setSuccess('Radiografía eliminada exitosamente.');
       setError(null);

@@ -106,7 +106,7 @@ const PacienteComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await axios.get<Paciente[]>('https://sonrisasbackendelectivaiv.somee.com/api/paciente');
+      const response = await axios.get<Paciente[]>('https://electivabackend.somee.com/api/paciente');
       setPacientes(response.data);
       setFilteredPacientes(response.data);
       setLoading(false);
@@ -119,7 +119,7 @@ const PacienteComponent: React.FC = () => {
 
   const fetchOdontologos = async () => {
     try {
-      const response = await axios.get<Odontologo[]>('https://sonrisasbackendelectivaiv.somee.com/api/odontologo');
+      const response = await axios.get<Odontologo[]>('https://electivabackend.somee.com/api/odontologo');
       setOdontologos(response.data);
     } catch (err: any) {
       console.error(err);
@@ -190,7 +190,7 @@ const PacienteComponent: React.FC = () => {
         odontologoId: formCreate.odontologoId,
       };
 
-      const response = await axios.post('https://sonrisasbackendelectivaiv.somee.com/api/paciente', payload);
+      const response = await axios.post('https://electivabackend.somee.com/api/paciente', payload);
 
       if (response.status === 201 || response.status === 200) {
         await fetchPacientes();
@@ -227,7 +227,7 @@ const PacienteComponent: React.FC = () => {
         odontologoId: formEdit.odontologoId,
       };
 
-      const response = await axios.put(`https://sonrisasbackendelectivaiv.somee.com/api/paciente/${pacienteToEdit.id}`, payload);
+      const response = await axios.put(`https://electivabackend.somee.com/api/paciente/${pacienteToEdit.id}`, payload);
 
       if (response.status === 200) {
         await fetchPacientes();
@@ -267,7 +267,7 @@ const PacienteComponent: React.FC = () => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar este paciente?')) return;
     setActionLoading(true);
     try {
-      const response = await axios.delete(`https://sonrisasbackendelectivaiv.somee.com/api/paciente/${id}`);
+      const response = await axios.delete(`https://electivabackend.somee.com/pi/paciente/${id}`);
       if (response.status === 200) {
         await fetchPacientes();
         setSuccessMessage('Paciente eliminado exitosamente.');

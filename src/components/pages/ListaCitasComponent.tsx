@@ -29,7 +29,7 @@ const ListaCitasComponent: React.FC = () => {
 
   const fetchPacientes = async () => {
     try {
-      const response = await axios.get('https://sonrisasbackendelectivaiv.somee.com/api/paciente');
+      const response = await axios.get('https://electivabackend.somee.com/api/paciente');
       if (response.status === 200) {
         setPacientes(response.data);
         setLoading(false);
@@ -195,7 +195,7 @@ const ListaCitasComponent: React.FC = () => {
                     <td className="text-center px-6 py-4 border-b border-gray-200 text-gray-900 whitespace-nowrap">
                       {paciente.rutaImagen ? (
                         <img
-                          src={`https://sonrisasbackendelectivaiv.somee.com${paciente.rutaImagen}`}
+                          src={`https://electivabackend.somee.com/${paciente.rutaImagen}`}
                           alt="Paciente"
                           className="w-16 h-16 object-cover rounded-full mx-auto"
                         />
