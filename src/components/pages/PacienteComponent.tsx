@@ -618,7 +618,7 @@ const PacienteComponent: React.FC = () => {
         )}
       </Modal>
 
-      {/* Formulario para Agregar Paciente */}
+      {/* Formulario para Agregar Paciente
       <form
         onSubmit={handleCreate}
         className="my-12 bg-white p-8 rounded-3xl shadow-lg"
@@ -776,7 +776,7 @@ const PacienteComponent: React.FC = () => {
             {actionLoading ? 'Guardando...' : 'Agregar'}
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 };
