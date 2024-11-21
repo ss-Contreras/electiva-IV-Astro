@@ -1,12 +1,11 @@
-// src/components/RadiografiasComponent.tsx
-
 import React, { useState, useEffect, type FormEvent } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import { FiTrash2, FiUpload } from 'react-icons/fi';
+import { FiTrash2, FiUpload, FiSearch, FiLoader } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useDropzone } from 'react-dropzone';
-import '../../styles/global.css'; // Asegúrate de que esta ruta es correcta
+import '../../styles/global.css';
+// import './RadiografiasComponent.css'; // Estilos adicionales específicos para las mejoras
 
 // Definición de interfaces
 interface Paciente {
@@ -14,17 +13,6 @@ interface Paciente {
   nombre: string;
   apellido: string;
   cedula: string;
-  edad: number;
-  fechaCita: string;
-  nuevoPaciente: string;
-  pacienteRecomendado: string;
-  motivoConsulta: string;
-  rutaImagen: string;
-  telefono: string;
-  correoElectronico: string;
-  direccion: string;
-  nombreOdontologo: string;
-  odontologoId: number;
 }
 
 interface RadiografiaDTO {
@@ -34,7 +22,6 @@ interface RadiografiaDTO {
   fecha: string; // ISO string
   pacienteId: number;
   nombrePaciente?: string;
-  correoElectronicoPaciente?: string;
 }
 
 interface NotificationProps {
@@ -50,7 +37,7 @@ const Notification: React.FC<NotificationProps> = ({ type, message, onClose }) =
 
   return (
     <div
-      className={`mb-6 ${bgColor} border ${borderColor} ${textColor} px-4 py-3 rounded relative`}
+      className={`mb-6 ${bgColor} border ${borderColor} ${textColor} px-4 py-3 rounded-lg shadow-lg animate-fade-in relative`}
       role="alert"
     >
       <span className="block sm:inline">{message}</span>
@@ -77,9 +64,8 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
   const [fecha, setFecha] = useState('');
   const [pacienteId, setPacienteId] = useState<number | null>(null);
   const [imagen, setImagen] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Estado para la vista previa
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   // Configuración de react-dropzone
@@ -89,7 +75,7 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
       'image/png': ['.png'],
     },
     maxSize: 5 * 1024 * 1024, // 5MB
-    onDrop: (acceptedFiles: File[], fileRejections: any[]) => { // Tipos explícitos
+    onDrop: (acceptedFiles: File[], fileRejections: any[]) => {
       if (fileRejections.length > 0) {
         setError('Solo se permiten imágenes en formato .jpg, .jpeg o .png y máximo 5MB.');
         return;
@@ -123,9 +109,7 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
 
-    // Validaciones
     if (!imagen) {
       setError('Por favor, selecciona una imagen.');
       return;
@@ -156,61 +140,55 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
           'Content-Type': 'multipart/form-data',
         },
       });
-      setSuccess('Radiografía subida exitosamente.');
       setDescripcion('');
       setFecha('');
       setPacienteId(null);
       setImagen(null);
+      setLoading(false);
       onRadiografiaCreated(response.data);
     } catch (err: any) {
       console.error('Error al subir radiografía:', err);
-      setError(err.response?.data?.message || 'Error al subir la radiografía.');
-    } finally {
+      setError('Error al subir la radiografía.');
       setLoading(false);
     }
   };
 
-  // Opciones para react-select en Pacientes
   const pacienteOptions = pacientes.map((paciente) => ({
     value: paciente.id,
     label: `${paciente.nombre} ${paciente.apellido || ''}`.trim(),
   }));
 
   return (
-    <div className="bg-white p-6 rounded-3xl shadow-lg mb-8">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Subir Nueva Radiografía</h2>
-      {/* Mensajes de Error y Éxito */}
+    <div className="bg-gradient-to-r from-blue-50 to-white p-10 rounded-3xl shadow-xl mb-8 transition-all duration-500 ease-in-out transform hover:shadow-2xl animate-fade-in">
+      <h2 className="text-3xl font-semibold mb-6 text-gray-800 text-center">Subir Nueva Radiografía</h2>
       {error && <Notification type="error" message={error} onClose={() => setError(null)} />}
-      {success && <Notification type="success" message={success} onClose={() => setSuccess(null)} />}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Área de Drag and Drop */}
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-3xl p-6 text-center cursor-pointer transition-colors ${
-            isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+          className={`border-2 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-all duration-500 ${
+            isDragActive ? 'border-blue-500 bg-blue-100 animate-pulse' : 'border-gray-300 hover:border-blue-500'
           }`}
         >
           <input {...getInputProps()} />
           {isDragActive ? (
             <p className="text-blue-500 flex items-center justify-center">
-              <FiUpload className="mr-2" />
+              <FiUpload className="mr-2 animate-bounce" />
               Suelta la imagen aquí...
             </p>
           ) : (
             <p className="text-gray-600 flex flex-col items-center">
-              <FiUpload className="text-4xl mb-2" />
+              <FiUpload className="text-6xl mb-2 text-blue-600" />
               Arrastra y suelta una imagen aquí, o haz clic para seleccionar una.
               <span className="text-sm text-gray-500">(Solo .jpg, .jpeg, .png - Max 5MB)</span>
             </p>
           )}
         </div>
-        {/* Vista Previa de la Imagen Seleccionada */}
         {previewUrl && (
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 animate-fade-in">
             <img
               src={previewUrl}
               alt="Vista previa"
-              className="w-24 h-24 object-cover rounded-lg"
+              className="w-32 h-32 object-cover rounded-xl shadow-lg transition-transform transform hover:scale-105"
             />
             <div className="flex-1">
               <p className="text-gray-700 font-semibold">{imagen?.name}</p>
@@ -225,8 +203,6 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
             </div>
           </div>
         )}
-
-        {/* Campo de Descripción */}
         <div>
           <label htmlFor="descripcion" className="block text-gray-700 mb-2">
             Descripción
@@ -236,13 +212,11 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all duration-500 ease-in-out hover:shadow-md"
             placeholder="Ingresa una descripción detallada de la radiografía."
             required
           ></textarea>
         </div>
-
-        {/* Campo de Fecha */}
         <div>
           <label htmlFor="fecha" className="block text-gray-700 mb-2">
             Fecha de la Radiografía
@@ -252,12 +226,10 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
             id="fecha"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
-            className="w-full px-4 py-2 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-500 ease-in-out hover:shadow-md"
             required
           />
         </div>
-
-        {/* Selector de Paciente */}
         <div>
           <label htmlFor="paciente" className="block text-gray-700 mb-2">
             Paciente
@@ -265,33 +237,39 @@ const RadiografiaForm: React.FC<RadiografiaFormProps> = ({ pacientes, loadingPac
           {loadingPacientes ? (
             <p className="text-gray-500">Cargando pacientes...</p>
           ) : pacientes.length > 0 ? (
-            <Select
-              id="paciente"
-              options={pacienteOptions}
-              value={
-                pacienteId
-                  ? pacienteOptions.find((option) => option.value === pacienteId) || null
-                  : null
-              }
-              onChange={handlePacienteChange}
-              isClearable
-              placeholder="Selecciona un paciente"
-              className="react-select-container"
-            />
+            <div className="relative z-50">
+              <Select
+                id="paciente"
+                options={pacienteOptions}
+                value={pacienteId ? pacienteOptions.find((option) => option.value === pacienteId) || null : null}
+                onChange={handlePacienteChange}
+                isClearable
+                placeholder="Selecciona un paciente"
+                className="react-select-container z-50"
+                menuPortalTarget={document.body} // <-- Asegura que el menú aparezca sobre cualquier otro elemento
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Asegura que el menú tenga un índice z alto
+                }}
+              />
+            </div>
           ) : (
             <p className="text-gray-500">No hay pacientes disponibles.</p>
           )}
         </div>
-
-        {/* Botón de Envío */}
         <button
           type="submit"
-          className={`w-full py-3 px-6 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-colors flex items-center justify-center ${
+          className={`w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-3xl hover:from-blue-700 hover:to-blue-500 transition-all duration-500 ease-in-out transform hover:scale-105 flex justify-center items-center ${
             loading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           disabled={loading}
         >
-          {loading ? 'Subiendo...' : 'Subir Radiografía'}
+          {loading ? (
+            <>
+              <FiLoader className="mr-2 animate-spin" /> Subiendo...
+            </>
+          ) : (
+            'Subir Radiografía'
+          )}
         </button>
       </form>
     </div>
@@ -305,63 +283,37 @@ interface RadiografiaItemProps {
 
 const RadiografiaItem: React.FC<RadiografiaItemProps> = ({ radiografia, onEliminar }) => {
   const handleEliminarClick = () => {
-    onEliminar(radiografia.id);
+    if (window.confirm(`¿Estás seguro de que deseas eliminar la radiografía de ${radiografia.nombrePaciente}?`)) {
+      onEliminar(radiografia.id);
+    }
   };
 
   return (
-    <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in relative">
       <img
         src={radiografia.imageUrl}
         alt={`Radiografía de ${radiografia.nombrePaciente || 'Paciente desconocido'}`}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-cover transition-transform transform hover:scale-105"
         loading="lazy"
       />
-      <div className="p-4">
+      <div className="p-6">
         <p className="text-gray-800 font-semibold">
           Paciente: {radiografia.nombrePaciente || 'N/A'}
         </p>
-        <p className="text-gray-600 text-sm">
-          Fecha: {new Date(radiografia.fecha).toLocaleString()}
+        <p className="text-gray-600 text-sm mt-1">
+          Fecha: {new Date(radiografia.fecha).toLocaleString('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
         </p>
-        <p className="text-gray-700 mt-2">{radiografia.descripcion}</p>
-        <div className="flex justify-end space-x-2 mt-4">
-          {/* Botón de Eliminar */}
-          <button
-            onClick={handleEliminarClick}
-            className="flex items-center px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-            aria-label={`Eliminar radiografía de ${radiografia.nombrePaciente || 'Paciente desconocido'}`}
-          >
-            <FiTrash2 className="mr-1" />
-            Eliminar
-          </button>
+        <p className="text-gray-700 mt-4 line-clamp-2">{radiografia.descripcion}</p>
+        <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg cursor-pointer hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out" onClick={handleEliminarClick}>
+          <FiTrash2 className="w-5 h-5" />
         </div>
       </div>
-    </div>
-  );
-};
-
-interface RadiografiaListProps {
-  radiografias: RadiografiaDTO[];
-  onEliminar: (id: number) => void;
-}
-
-const RadiografiaList: React.FC<RadiografiaListProps> = ({ radiografias, onEliminar }) => {
-  return (
-    <div className="bg-white p-6 rounded-3xl shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Radiografías Recientes</h2>
-      {radiografias.length === 0 ? (
-        <p className="text-center text-gray-600">No hay radiografías disponibles.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {radiografias.map((radiografia) => (
-            <RadiografiaItem
-              key={radiografia.id}
-              radiografia={radiografia}
-              onEliminar={onEliminar}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 };
@@ -376,13 +328,16 @@ const RadiografiasComponent: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  // Función para obtener la lista de pacientes
+  useEffect(() => {
+    fetchPacientes();
+    fetchRadiografiasRecientes();
+  }, []);
+
   const fetchPacientes = async () => {
     setLoadingPacientes(true);
     try {
       const response = await axios.get<Paciente[]>('https://electivabackend.somee.com/api/paciente');
       setPacientes(response.data);
-      setError(null); // Limpiar el error si la carga es exitosa
     } catch (err: any) {
       console.error('Error al obtener pacientes:', err);
       setError('No se pudo obtener la lista de pacientes.');
@@ -391,14 +346,12 @@ const RadiografiasComponent: React.FC = () => {
     }
   };
 
-  // Función para obtener radiografías recientes
   const fetchRadiografiasRecientes = async (cantidad: number = 10) => {
     try {
       const response = await axios.get<RadiografiaDTO[]>('https://electivabackend.somee.com/api/radiografias/recientes', {
         params: { cantidad },
       });
       setRadiografias(response.data);
-      setError(null); // Limpiar el error si la carga es exitosa
       setLoading(false);
     } catch (err: any) {
       console.error('Error al obtener radiografías:', err);
@@ -407,51 +360,17 @@ const RadiografiasComponent: React.FC = () => {
     }
   };
 
-  // Función para buscar radiografías
-  const buscarRadiografias = async (termino: string) => {
-    try {
-      const response = await axios.get<RadiografiaDTO[]>('https://electivabackend.somee.com/api/radiografias/buscar', {
-        params: { termino },
-      });
-      setRadiografias(response.data);
-      setError(null); // Limpiar el error si la búsqueda es exitosa
-    } catch (err: any) {
-      console.error('Error al buscar radiografías:', err);
-      setError('No se pudo realizar la búsqueda.');
-    }
-  };
-
-  useEffect(() => {
-    fetchPacientes();
-    fetchRadiografiasRecientes();
-  }, []);
-
-  // Manejo de la búsqueda
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    if (term.trim() === '') {
-      fetchRadiografiasRecientes();
-    } else {
-      buscarRadiografias(term);
-    }
-  };
-
-  // Función para manejar la creación de una nueva radiografía
   const handleRadiografiaCreated = (radiografia: RadiografiaDTO) => {
     setRadiografias([radiografia, ...radiografias]);
     setSuccess('Radiografía subida exitosamente.');
-    setError(null);
   };
 
-  // Función para manejar la eliminación de una radiografía
   const handleEliminar = async (id: number) => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta radiografía?')) return;
     try {
       await axios.delete(`https://electivabackend.somee.com/api/radiografias/${id}`);
       setRadiografias(radiografias.filter((r) => r.id !== id));
       setSuccess('Radiografía eliminada exitosamente.');
-      setError(null);
     } catch (err: any) {
       console.error('Error al eliminar radiografía:', err);
       setError('No se pudo eliminar la radiografía.');
@@ -459,38 +378,33 @@ const RadiografiasComponent: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Radiografías</h1>
-
-      {/* Mensajes de Error y Éxito */}
+    <div className="container mx-auto px-6 py-12 animate-fade-in">
+      <h1 className="text-4xl font-bold mb-12 text-center text-gray-800">Gestión de Radiografías</h1>
       {error && <Notification type="error" message={error} onClose={() => setError(null)} />}
       {success && <Notification type="success" message={success} onClose={() => setSuccess(null)} />}
-
-      {/* Formulario de Subida de Radiografías */}
       <RadiografiaForm
         pacientes={pacientes}
         loadingPacientes={loadingPacientes}
         onRadiografiaCreated={handleRadiografiaCreated}
       />
-
-      {/* Barra de Búsqueda */}
-      {/* <div className="mb-4 flex justify-end">
-        <input
-          type="text"
-          placeholder="Buscar radiografías..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div> */}
-
-      {/* Listado de Radiografías */}
       {loading ? (
-        <div className="text-center">
-          <p className="text-gray-600">Cargando radiografías...</p>
+        <div className="text-center mt-16">
+          <FiLoader className="animate-spin text-6xl text-blue-600 mx-auto" />
+          <p className="mt-4 text-gray-600">Cargando radiografías...</p>
         </div>
       ) : (
-        <RadiografiaList radiografias={radiografias} onEliminar={handleEliminar} />
+        <div className="bg-gradient-to-r from-white to-blue-50 p-8 rounded-3xl shadow-lg transition-all duration-500 ease-in-out transform hover:shadow-2xl">
+          <h2 className="text-3xl font-semibold mb-8 text-gray-800 text-center">Radiografías Recientes</h2>
+          {radiografias.length === 0 ? (
+            <p className="text-center text-gray-600">No hay radiografías disponibles.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {radiografias.map((radiografia) => (
+                <RadiografiaItem key={radiografia.id} radiografia={radiografia} onEliminar={handleEliminar} />
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
