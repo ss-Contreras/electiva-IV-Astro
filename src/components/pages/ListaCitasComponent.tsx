@@ -81,13 +81,25 @@ const ListaCitasComponent: React.FC = () => {
         Lista de Citas
       </h1>
       <div className="flex justify-between items-center mt-8 mb-4">
+        <div className='relative'>
         <input
           type="text"
-          placeholder="Buscar por nombre o cédula..."
+          placeholder="Buscar información..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="border rounded-md px-4 py-2 w-full max-w-xs text-sm"
+          className="w-full md:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <svg
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <circle cx="11" cy="11" r="8" strokeWidth="2"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65" strokeWidth="2"></line>
+        </svg>
+        </div>
         <span className="text-gray-700 ml-4">
           Página {currentPage} de {Math.ceil(filteredPacientes.length / itemsPerPage)}
         </span>
